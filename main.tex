@@ -69,6 +69,9 @@ In the fifth chapter the effort spent by each of the group members is described 
 \section{Overall Description}
 
 \subsection{Product Perspective}
+The application will need to communicate to both Public transport system , bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information’s helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
+Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
+
     \begin{figure}[ht]
         \includegraphics[scale=0.52]{domainModel.png}
         \caption{Class Diagram of the domain}
