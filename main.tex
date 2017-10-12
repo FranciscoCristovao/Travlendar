@@ -3,6 +3,7 @@
 \pagenumbering{arabic}
 \usepackage{graphicx}
 \usepackage{amstext}
+\usepackage[usenames, dvipsnames]{color}
 \graphicspath{ {images/} }
 
 
@@ -39,17 +40,19 @@
 \newpage
 
 \section{Introduction}
+
 \subsection{Purpose}
-The main goal of this project is to create a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. With this in mind, the application:
+
+The main goal of this project is to create a calendar-based application which provides the user a flexible and fully-featured calendar support that considers the travel time between meetings. With this in mind, the application will:
 \begin{itemize}
-\item computes and accounts for travel time between appointments
-\item supports the user in his/her travels
+\item compute and account for travel time between appointments, and prevent conflicts between them
+\item support the user in his/her travels, adding automatically the travel time to the calendar between meetings, and suggesting the best travel option based on the available time
 \end{itemize}
 
 \subsection{Scope}
-The Travlendar+ is  a calendar based application which helps people to schedule appointments in flexible and fully -featured calendar support by considering the travel time between meetings. The application supports a multitude of travel means, including walking, biking, public transportation, and driving. The application is dynamic in order to support weather forecast. A particular user may globally activate or deactivate each travel means ((e.g., a user who does not own a bicycle would deactivate biking). A user can also be able to provide reasonable constraints on different travel means (e.g., walking distances should be less than a given distance, or public transportation should not be used after a given time of day). 
-Specifically  when a user interacts with the application ,the application can: compute travel times between meetings (or proposed meetings) and prevent scheduling meetings whose start/end times conflict as a result of inability to travel, explicitly but subtly add "travel time" to the calendar between meetings, reserving the required amount of time on the calendar, suggest  the "best" option of travel between each meeting, create overall compatible schedules on a day-basis by considering that a user who does not leave the house with his bicycle or car in the morning cannot use it to move between meetings during the day, and specify a flexible “lunch” with a minimum of 30 minutes within the specified time of the day(11:30-2:30).
-The Travlendar+ application supports different types of users, including people who work "on the road", traveling from meeting to meeting throughout the day as well as busy parents shuttling kids to and from.( In this part we have to add what the system (application) needs to function).
+Travlendar+ is a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. This application was not only thought for the regular businessman/businesswoman, who travel in between meetings the whole day and have no time to spare, but also for the parents with a more regular daily schedule, who just want to get the best of their time while being able to pick their kids from school and take them to other activities, always being on time.
+Of course the system will fully support the features of a regular calendar application (booking of appointments in a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment). The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
+
 
 \subsection{Definitions, Acronyms, Abbreviations}
 
@@ -71,5 +74,64 @@ In the fifth chapter the effort spent by each of the group members is described 
         \caption{Class Diagram of the domain}
     \label{fig:domainModel}
     \end{figure}
+    
+\subsection{Product Functions}
+
+\subsection{User Characteristics}
+
+\subsection{Assumptions, dependencies and constraints}
+[D1] The username must be unique.  
+[D2] The system will have access to the phone GPS functionality.
+
+\section{Specific Requirements}
+
+\subsection{External Interface Requirements}
+
+\subsubsection{User Interfaces}
+
+\subsubsection{Hardware Interfaces}
+In the first release no Hardware Interfaces will be necessary, since the system doesn't need to interact physically with other systems.
+
+\subsubsection{Software Interfaces}
+Given the wide range of features the system offers, it will need to have several software interfaces. There has to be a way of storing all the user-related data (mainly login and preferences data). In that sense, the system will use a \textbf{MySQL API} to connect with a MySQL database server, where all the app data will be stored.\\
+The system will also need different kinds of information about the users location and its surrounding, in order to compute the travel time between appointments. To support this functionality, the system will use \textbf{Google Maps Geolocation API} and \textbf{Google Maps API}. The first one will provide information about the user exact location and the second one will provide the real-time information about maps and traffic, and allow it to calculate the best route between two different appointments.\\
+To have access to the current weather, the system will use \textbf{AccuWeather API}, which will provide information about the current weather either where the user is or where the user is going.
+At last, the system also needs to get all sorts of information from many different travel means. In order to get this information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Ofo API} (for the bike sharing system).
+
+
+
+\subsubsection{Communication Interfaces}
+
+\subsection{Functional Requirements}
+
+\subsection{Performance Requirements}
+
+\subsection{Design Constraints}
+\subsubsection{Standard Compliance}
+\subsubsection{Hardware Limitations}
+\subsubsection{Any other Constraint}
+
+\subsection{Software System Attributes}
+\subsubsection{Reliability}
+\subsubsection{Availability}
+\subsubsection{Security}
+\subsubsection{Maintainability}
+\subsubsection{Portability}
+
+\section{Formal Analysis Using Alloy}
+
+\section{Effort Spent}
+
+\begin{center}
+\begin{tabular}{ |l|l|l| } 
+ \hline
+ DATE & TASK & HOURS \\ 
+ cell4 & cell5 & cell6 \\ 
+ cell7 & cell8 & cell9 \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+\section{References}
 
 \end{document}
