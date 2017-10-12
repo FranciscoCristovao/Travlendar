@@ -69,9 +69,8 @@ In the fifth chapter the effort spent by each of the group members is described 
 \section{Overall Description}
 
 \subsection{Product Perspective}
-The application will need to communicate to both Public transport system , bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information’s helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
+The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information’s helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
 Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
-
     \begin{figure}[ht]
         \includegraphics[scale=0.52]{domainModel.png}
         \caption{Class Diagram of the domain}
@@ -79,11 +78,18 @@ Since this application is data centric product it will need somewhere to store t
     \end{figure}
     
 \subsection{Product Functions}
+The main functionalities supported by the system will be:
+\begin{itemize}
+    \item Allow the user to book an appointment with a given time, location and duration
+    \item Suggest to the user the best travel means for him to use in between appointments, based on his preferences, the time available and the weather
+\end{itemize}
 
 \subsection{User Characteristics}
+The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, that user that is always in a tight schedule and needs a tool like our system to simplify the way he books and turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
+All of this types of users are of working age (15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and know how to use a smartphone.
 
 \subsection{Assumptions, dependencies and constraints}
-[D1] The username must be unique.  
+[D1] The username must be unique.\\{}
 [D2] The system will have access to the phone GPS functionality.
 
 \section{Specific Requirements}
