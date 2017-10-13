@@ -55,6 +55,9 @@ Of course the system will fully support the features of a regular calendar appli
 
 
 \subsection{Definitions, Acronyms, Abbreviations}
+API: Application Programming Interface
+RASD: Requirements Analysis and Specification Document
+MTBF: Mean Time Between Failure
 
 \subsection{Revision History}
 
@@ -85,12 +88,15 @@ The main functionalities supported by the system will be:
 \end{itemize}
 
 \subsection{User Characteristics}
-The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, that user that is always in a tight schedule and needs a tool like our system to simplify the way he books and turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
+The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, the user that is always in a tight schedule and needs a tool like our system to simplify the way he books and turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
 All of this types of users are of working age (15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and know how to use a smartphone.
 
 \subsection{Assumptions, dependencies and constraints}
 [D1] The username must be unique.\\{}
-[D2] The system will have access to the phone GPS functionality.
+[D2] The system will have access to the phone GPS functionality.\\{}
+[D3] The phone will always have a connection to the internet (WiFi or mobile data).
+[D4] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.
+
 
 \section{Specific Requirements}
 
@@ -110,11 +116,11 @@ At last, the system also needs to get all sorts of information from many differe
 
 
 \subsubsection{Communication Interfaces}
-The communication between the Travledar+ application with the other software interfaces (mention above in the software interface part of this document) is important because the application depends on these services. Here the communication is achieved when both the Travledar+ application and the software interfaces are connected to an Internet. The Travledar+ mobile application can use WiFi or mobile data but the software interfaces must be connected regardless of the type of connection they use to connect to Internet.
-
-
+The communication between the the system and the other software interfaces (mentioned above in the software interface part of this document) is important because the system depends on these services. Here the communication is achieved when both the system and the software interfaces are connected to an Internet. The systems mobile application can use WiFi or mobile data but the software interfaces must be connected to the internet regardless of the type of connection they use.
 
 \subsection{Functional Requirements}
+
+
 
 \subsection{Performance Requirements}
 
@@ -125,10 +131,20 @@ The communication between the Travledar+ application with the other software int
 
 \subsection{Software System Attributes}
 \subsubsection{Reliability}
+When deployed, no bugs must be detected on the system, and the system must be fully available and functional for 99,9\% of the calendar year. 
+
+
 \subsubsection{Availability}
+The services that the system provides must be available 24/7. Obviously, taking into account that this requirement is really hard to fulfill, very small deviations from this requirement will be considered acceptable.
+
 \subsubsection{Security}
+Users credentials and payment information are critical data that will be stored in the systems database. Since the system communicates with external systems, the security and inaccessibility (when not needed) of this data is a big concern that has to be assured. All of the data related to the appointments has to be secured too since it can be sensible information. 
+
 \subsubsection{Maintainability}
+To measure the systems maintainability a metric shall be used. This metric needs to be tracked during the development and kept as low as possible, in order to avoid high maintainability costs subsequently. It's obvious that the system must have a high maintainability, which means that the probability of performing a successful repair action within a given (necessary) time must be high (higher than 95\%).
+
 \subsubsection{Portability}
+The first release of the system will be available for the two most used mobile platforms, IOS and Android. Nonetheless, a new platform may arise, and so it's crucial that the system is built in a way which makes it easy to deploy in this new platform. The portability measure consists on the cost that deploying the system in a new platform implies, and in our case, this cost should be smaller than the cost of deploying other similar apps.
 
 \section{Formal Analysis Using Alloy}
 
@@ -145,5 +161,9 @@ The communication between the Travledar+ application with the other software int
 \end{center}
 
 \section{References}
+https://belitsoft.com/php-development-services/software-requirements-specification-document-example-international-standard\\
+https://en.wikipedia.org/wiki/Portability_testing\\
+https://en.wikipedia.org/wiki/Maintainability\\
+https://en.wikipedia.org/wiki/Software_reliability_testing
 
 \end{document}
