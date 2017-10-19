@@ -59,7 +59,6 @@ Of course the system will fully support the features of a regular calendar appli
 \subsection{Definitions, Acronyms, Abbreviations}
 API: Application Programming Interface\\
 RASD: Requirements Analysis and Specification Document\\
-MTBF: Mean Time Between Failure
 Home Screen: User interface screen that shows the current appointments.
 
 \subsection{Revision History}
@@ -68,14 +67,14 @@ Home Screen: User interface screen that shows the current appointments.
 Assignment document: Mandatory Project Assignments.pdf
 
 \subsection{Document Structure}
-Other than this introductory chapter, this RASD is organized in five more chapters. Chapter two is meant to provide an overview of the systems functionalities, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned above) the systems requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
-The fourth chapter deals with the formal analysis of the system using and Alloy model. It includes the Alloy model of the system, with a brief discussion on its purpose and on the relevance of using Alloy as a tool to validate our solution, given the problem we had to solve.
+Other than this introductory chapter, this RASD is organized in five more chapters. Chapter two is meant to provide an overview of the systems functionalities, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned above) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
+The fourth chapter deals with the formal analysis of the system using an Alloy model. It includes the Alloy model of the system with a brief discussion on its purpose and on the relevance of using Alloy as a tool to validate our solution, given the problem we had to solve.
 In the fifth chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document.
 
 \section{Overall Description}
 
 \subsection{Product Perspective}
-The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information’s helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
+The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
 Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
     \begin{figure}[ht]
         \includegraphics[scale=0.52]{domainModel.png}
@@ -86,13 +85,13 @@ Since this application is data centric product it will need somewhere to store t
 \subsection{Product Functions}
 The main functionalities supported by the system will be:
 \begin{itemize}
-    \item Allow the user to book an appointment with a given time, location and duration
-    \item Suggest to the user the best travel means for him to use in between appointments, based on his preferences, the time available and the weather
+    \item Allow the user to book an appointment with a given time, location and duration.
+    \item Suggest to the user the best travel means for him to use in between appointments, based on his preferences, the time available and the weather.
 \end{itemize}
 
 \subsection{User Characteristics}
 The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, the user that is always in a tight schedule and needs a tool like our system to simplify the way he books and turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
-All of this types of users are of working age (20 to 70 years old, being this a small deviation of the official definition, which is from 15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and know how to use a smartphone.
+All of these types of users are of working age (20 to 70 years old, being this a small deviation of the official definition, which is from 15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and know how to use a smartphone.
 
 \subsection{Assumptions, dependencies and constraints}
 [D1] The username must be unique.\\{}
@@ -107,7 +106,7 @@ All of this types of users are of working age (20 to 70 years old, being this a 
 \subsection{External Interface Requirements}
 
 \subsubsection{User Interfaces}
-These Mockups represent a basic idea e of how the applications user interface will look like on the first release.
+These Mockups represent a basic idea of how the applications user interface will look like on the first release.
 
 \subsubsection{Hardware Interfaces}
 In the first release no Hardware Interfaces will be necessary, since the system doesn't need to interact physically with other systems.
@@ -116,13 +115,13 @@ In the first release no Hardware Interfaces will be necessary, since the system 
 Given the wide range of features the system offers, it will need to have several software interfaces. There has to be a way of storing all the user-related data (mainly login and preferences data). In that sense, the system will use a \textbf{MySQL API} to connect with a MySQL database server, where all the app data will be stored.\\
 The system will also need different kinds of information about the users location and its surrounding, in order to compute the travel time between appointments. To support this functionality, the system will use \textbf{Google Maps Geolocation API} and \textbf{Google Maps API}. The first one will provide information about the user exact location and the second one will provide the real-time information about maps and traffic, and allow it to calculate the best route between two different appointments.\\
 To have access to the current weather, the system will use \textbf{AccuWeather API}, which will provide information about the current weather either where the user is or where the user is going.
-At last, the system also needs to get all sorts of information from many different travel means. In order to get this information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Ofo API} (for the bike sharing system).
+At last, the system also needs to get all sorts of information from many different travel means. In order to get these information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Mobike API} (for the bike sharing system).
 
 
 
 \subsubsection{Communication Interfaces}
 Communication interfaces ensure the communication between the system and the other software interfaces (third party service providers).
-The communication between the system and those service providers is crucial because the system depends on those services in order to perform its functions. Given this, the systems communication interface must be either WiFi or mobile data, and the service providers communication interface can be of any type, as long as it ensures that they are connected to the internet. The protocol used shall be HTTPS, in order to keep the communications secure.
+The communication between the system and those service providers is crucial because the system depends on those services to perform its functions. Given this, the systems communication interface must be either WiFi or Mobile Data (2G, 3G or 4G), and the service providers communication interface can be of any type, as long as it ensures that they are connected to the internet. The protocol used shall be HTTPS, in order to keep the communications secure.
 
 \subsection{Functional Requirements}
 
@@ -214,7 +213,7 @@ The communication between the system and those service providers is crucial beca
                             \item The Visitor is already a user. 
                             \item The Visitor doesn't fill all the mandatory fields or fills them with invalid data.
                             \item The Visitor chooses a username which is already associated with another user.
-                            \item The Visitor chooses an email which is already in use by another user. 
+                            \item The Visitor chooses an email which is already associated with another user. 
                             \end{enumerate} 
                             All exceptions are handled notifying the Visitor about the issue and going back to event 2 of the Event Flow described above.\\ 
         \hline
@@ -362,15 +361,15 @@ The communication between the system and those service providers is crucial beca
 The system has to be able to respond to a possibly large number of requests (depending on the amount of users the system will have). Taking into account other (less powerful but widely used) calendar and transport applications, an infrastructure that supports a maximum workload on the order of hundreds of thousands of requests shall be enough to satisfy all the possible simultaneous requests after the release. The infrastructure must have a good Scalability in order to increase the maximum workload in case the user base increases too. The response times of the system shall be\footnote{According to Jakon Nielsen book on Usability}:
 \begin{itemize}
     \item 0.1 second for the tasks that require almost no computing power (changing menus in the systems case), in order for the user to feel that the system is reacting instantaneously
-    \item 1 second for the tasks that require a normal amount of computing power, in order for the users flow of thought to stay uninterrupted (deleting an appointment in the systems case)
-    \item 10 second for the task that require significant computing power, in order for the user’s flow of thought to stay uninterrupted (computing the best travel route and consequent travel mean to get to an appointment in the systems case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
+    \item 1 second for the tasks that require a normal amount of computing power, in order for the user's flow of thought to stay uninterrupted (deleting an appointment in the systems case)
+    \item 10 second for the task that require significant computing power, in order to keep the user's attention focused on the dialogue(computing the best travel route and consequent travel mean to get to an appointment in the systems case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
 \end{itemize}
-A user is assumed to have a stable internet connection in order to achieve these response times.
+N.B. A user is assumed to have a stable internet connection in order to achieve these response times.
 
 
 \subsection{Design Constraints}
 \subsubsection{Standard Compliance}
-The system must require the users permission to provide their location, preferences and schedule to the external services it uses (transport services and weather services), in order to manage sensible data always respecting the privacy law.
+The system must require the users permission to provide their location, preferences and schedule to the external services it uses (transport services and weather services), in order to manage sensible data always respecting the privacy law. For this, the system has to be compliant with the regulation on Software in Data Security and Privacy, international treaty obligations and Italian laws, as well as with any other regulation the third party systems it interacts with comply.
 
 \subsubsection{Hardware Limitations}
 The user will need a mobile phone with GPS and Wi-fi/Mobile Data always on when using the app, other than the obvious space for the application package.
@@ -422,7 +421,9 @@ The first release of the system will be available for the mobile platform our ta
   \hline
   18/10/2017 & Goals, Requirements and Domain Assumptions & 2 \\ 
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{20} \\ 
+  19/10/2017 & Use Case Description, Performance Constraints & 2 \\ 
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{22} \\ 
   \hline
 \end{tabular}
 \end{center}
@@ -433,5 +434,6 @@ https://en.wikipedia.org/wiki/Portability_testing\\
 https://en.wikipedia.org/wiki/Maintainability\\
 https://en.wikipedia.org/wiki/Software_reliability_testing
 Jakon Nielsen book on Usability - response intervals data 
+http://www.enforcive.com/regulatory-compliance-software
 
 \end{document}
