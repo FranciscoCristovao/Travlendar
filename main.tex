@@ -21,7 +21,7 @@
 
     \Huge\textbf{Software Engineering 2 Project - Travlendar+}
     \rule{12cm}{0.5pt}
-    \Huge\textbf{RASD - Requirement Analysis and Specification Document}
+    \Huge\textbf{Requirement Analysis and Specification Document - V1}
     \today
     \end{center}
     
@@ -57,9 +57,17 @@ Of course the system will fully support the features of a regular calendar appli
 
 
 \subsection{Definitions, Acronyms, Abbreviations}
-API: Application Programming Interface\\
-RASD: Requirements Analysis and Specification Document\\
-Home Screen: User interface screen that shows the current appointments.
+\subsubsection{Definitions}
+\textit{Home Screen}: User interface screen that shows the current appointments.\\
+\textit{Flexible Appointment}: An appointment which the start and end date may change between a given time range (are flexible).
+\subsubsection{Acronyms}
+\textit{API}: Application Programming Interface\\
+\textit{RASD}: Requirements Analysis and Specification Document
+\subsubsection{Abbreviations}
+\textit{Gn}: Goal defined with index n.\\
+\textit{Dn}: Domain Assumption defined with index n.\\
+\textit{Rn}: Functional Requirement defined with index n.
+
 
 \subsection{Revision History}
 
@@ -67,7 +75,7 @@ Home Screen: User interface screen that shows the current appointments.
 Assignment document: Mandatory Project Assignments.pdf
 
 \subsection{Document Structure}
-Other than this introductory chapter, this RASD is organized in five more chapters. Chapter two is meant to provide an overview of the systems functionalities, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned above) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
+Other than this introductory chapter, this RASD is organized in five more chapters. Chapter two is meant to provide an overview of the systems functionality, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned above) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
 The fourth chapter deals with the formal analysis of the system using an Alloy model. It includes the Alloy model of the system with a brief discussion on its purpose and on the relevance of using Alloy as a tool to validate our solution, given the problem we had to solve.
 In the fifth chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document.
 
@@ -83,10 +91,10 @@ Since this application is data centric product it will need somewhere to store t
     \end{figure}
     
 \subsection{Product Functions}
-The main functionalities supported by the system will be:
+The main functions supported by the system will be:
 \begin{itemize}
     \item Allow the user to book an appointment with a given time, location and duration.
-    \item Suggest to the user the best travel means for him to use in between appointments, based on his preferences, the time available and the weather.
+    \item Plan the user's schedule in the best possible way, suggesting him where to book flexible appointments and which travel means to use in between appointments, based on his preferences, the time available and the weather.
 \end{itemize}
 
 \subsection{User Characteristics}
@@ -132,54 +140,42 @@ The communication between the system and those service providers is crucial beca
     \item{[R]} The system shall register the visitor as a user when the registration process ends.
     \item {[D]} The username and email must be unique.
 \end{itemize}
-{[G2]} Allow a user to create an appointment.
+{[G2]} Allow a logged user to create an appointment.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
     \item{[R]} The system shall allow the user to fill in all the needed information about the appointment.
     \item{[R]} The system shall create a warning if the appointments location is unreachable.
     \item{[R]} The system shall not allow the user to create an appointment if the location is unreachable.
-    \item{[R]} The system shall allow the user to select if the scheduled hour for the appointment is flexible or not.
+    \item{[R]} The system shall allow the user to select if the appointment is flexible or not.
     \item{[R]} The system shall create the appointment if all the data inserted by the user is valid.
     \item {[D]} The location of the appointment will always be inserted correctly.
 \end{itemize}
-{[G3]} Allow a user to edit an appointment.
+{[G3]} Allow a logged user to edit an appointment.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
     \item{[R]} The system shall allow the user to edit all the provided information about the appointment.
     \item{[R]} The system shall create a warning if the appointments new location is unreachable.
     \item{[R]} The system shall not allow the user to submit the changes if the new location is unreachable.
     \item{[R]} The system shall submit the changes to the appointment if all the data inserted by the user is valid.
-    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly before the one deleted.
-    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly after the one deleted.
     \item {[D]} The location of the appointment will always be inserted correctly.
 \end{itemize}
-{[G4]} Allow a user to delete an appointment.
+{[G4]} Allow a logged user to delete an appointment.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
-    \item{[R]} The system shall allow the user delete the appointment and all the information referring to it.
-    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly before the one deleted.
-    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly after the one deleted.
+    \item{[R]} The system shall allow the user to delete an appointment and all the information referring to it.
 \end{itemize}
-{[G5]} Allow a user to know which is the best travel mean to get to an appointment.
+{[G5]} Allow a logged user to have his schedule planned in the best possible way.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
-    \item{[R]} The system shall compute the best route for the user to take to an appointment.
-    \item{[R]} The system shall compute the best travel mean for the user, taking into account the computed route to an appointment.
-    \item{[R]} The system shall display the best travel mean for each appointment the user has created.
+    \item{[R]} The system shall compute the best travel mean to get to each appointment, taking into account the computed route to an appointment.
+    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly before and after the one deleted.
+    \item{[R]} The system shall re-plan the users schedule every time an appointment is inserted, deleted or it's location and/or date is changed.
+    \item{[R]} The system shall display the best travel mean to get to each appointment, along with the best arrangement of appointments.
     \item{[D]} The best route to get to an appointment will always be computed correctly.
     \item{[D]} The best travel mean to get to an appointment will always be computed correctly.
     
 \end{itemize}
-{[G6]} Allow a user to define preferences related to travel means.
+{[G6]} Allow a logged user to define preferences related to travel means.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
     \item{[R]} The system shall allow the user to enable all the travel means he wants the system to consider when computing the best way to move in between appointments.
     \item{[R]} The system shall allow the user to disable all the travel means he doesn't want the system to consider when computing the best way to move in between appointments.
-\end{itemize}
-{[G7]} Allow a user to define constraints related to travel means.
-\begin{itemize}
-    \item{[R]} The system shall allow the user to login to the system when providing his valid login credentials.
-    \item{[R]} The system shall allow the user to select the distance he is willing to walk from one appointment to another.
+    \item{[R]} The system shall allow the user to select the maximum distance he is willing to walk from one appointment to another.
     \item{[R]} The system shall allow the user to select an hour of the day from when public transportation shall not be used.
     \item{[R]} The system shall allow the user to select a combination of public transportation in order to minimize his carbon footprint.
 \end{itemize}
@@ -288,7 +284,7 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Actors} & User \\ 
         \hline
-        \textbf{Goals} & {[G4]} \\ 
+        \textbf{Goals} & {[G4 and G5]} \\ 
         \hline  
         \textbf{Preconditions} & The User must have created at least one appointment. \\ 
         \hline
@@ -306,27 +302,6 @@ The communication between the system and those service providers is crucial beca
     \end{tabular}
 \end{center}
 
-\paragraph{User looks for the best travel mean to get to an appointment}
-\begin{center}
-    \begin{tabular} { |p{0.25\textwidth}|p{0.7\textwidth}| }
-        \hline
-        \textbf{Actors} & User \\ 
-        \hline
-        \textbf{Goals} & {[G5]} \\ 
-        \hline  
-        \textbf{Preconditions} & The User must have created at least one appointment. \\ 
-        \hline
-        \textbf{Events Flow} & \begin{enumerate} 
-                            \setlength{\itemsep}{0.5pt}
-                            \item The looks for the appointment he wants on the Home Screen and reads the data about it
-                            \end{enumerate} \\
-        \hline
-        \textbf{Postconditions} & The User successfully deactivated Bike Sharing as a mean of transportation and is redirected to the Home Screen. \\
-        \hline
-        \textbf{Exceptions} & There are no exceptions.\\ 
-        \hline
-     \end{tabular}
-\end{center}
 
 \paragraph{User deactivates Bike Sharing as a travel mean}
 \begin{center}
