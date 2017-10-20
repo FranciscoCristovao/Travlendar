@@ -6,6 +6,7 @@
 \usepackage[usenames, dvipsnames]{color}
 \usepackage{array}
 \usepackage{float}
+\usepackage{enumitem}
 \graphicspath{ {images/} }
 
 
@@ -84,9 +85,10 @@ In the fifth chapter the effort spent by each of the group members is described 
 \subsection{Product Perspective}
 The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
 Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
-    \begin{figure}[ht]
-        \includegraphics[scale=0.52]{domainModel.png}
+    \begin{figure}[H]
+        \includegraphics[scale=0.485]{domainModel.png}
         \caption{Class Diagram of the domain}
+        \centering
     \label{fig:domainModel}
     \end{figure}
     
@@ -136,7 +138,7 @@ The communication between the system and those service providers is crucial beca
 {[G1]} Allow a visitor to become a user after providing the required information and credentials.
 \begin{itemize}
     \item{[R]} The system shall allow the visitor to begin the registration process when he accesses the system. 
-    \item{[R]} The system shall ask the visitor for the required information and credentials during the registration process
+    \item{[R]} The system shall ask the visitor for the required information and credentials during the registration process.
     \item{[R]} The system shall register the visitor as a user when the registration process ends.
     \item {[D]} The username and email must be unique.
 \end{itemize}
@@ -147,7 +149,6 @@ The communication between the system and those service providers is crucial beca
     \item{[R]} The system shall not allow the user to create an appointment if the location is unreachable.
     \item{[R]} The system shall allow the user to select if the appointment is flexible or not.
     \item{[R]} The system shall create the appointment if all the data inserted by the user is valid.
-    \item {[D]} The location of the appointment will always be inserted correctly.
 \end{itemize}
 {[G3]} Allow a logged user to edit an appointment.
 \begin{itemize}
@@ -155,20 +156,19 @@ The communication between the system and those service providers is crucial beca
     \item{[R]} The system shall create a warning if the appointments new location is unreachable.
     \item{[R]} The system shall not allow the user to submit the changes if the new location is unreachable.
     \item{[R]} The system shall submit the changes to the appointment if all the data inserted by the user is valid.
-    \item {[D]} The location of the appointment will always be inserted correctly.
 \end{itemize}
 {[G4]} Allow a logged user to delete an appointment.
 \begin{itemize}
-    \item{[R]} The system shall allow the user to delete an appointment and all the information referring to it.
+    \item{[R]} The system shall allow the user to delete all the data related to the appointment that the user wants to delete.
 \end{itemize}
 {[G5]} Allow a logged user to have his schedule planned in the best possible way.
 \begin{itemize}
-    \item{[R]} The system shall compute the best travel mean to get to each appointment, taking into account the computed route to an appointment.
-    \item{[R]} The system shall re-calculate the best travel mean to get to the appointments directly before and after the one deleted.
-    \item{[R]} The system shall re-plan the users schedule every time an appointment is inserted, deleted or it's location and/or date is changed.
+    \item{[R]} The system shall compute the best possible arrangement of the user's appointments that fulfills his/her preferences.
+    \item{[R]} The system shall compute the best travel mean to get to each appointment.
+    \item{[R]} The system shall re-plan the users schedule every time an appointment is inserted, deleted or its location and/or date is changed.
+    \item{[R]} The system shall re-compute the best travel mean to get to the other appointments in case one of the appointment gets deleted or its location is edited.
     \item{[R]} The system shall display the best travel mean to get to each appointment, along with the best arrangement of appointments.
-    \item{[D]} The best route to get to an appointment will always be computed correctly.
-    \item{[D]} The best travel mean to get to an appointment will always be computed correctly.
+    \item{[D]} The best route and travel mean to get to an appointment will always be computed correctly.
     
 \end{itemize}
 {[G6]} Allow a logged user to define preferences related to travel means.
@@ -180,6 +180,22 @@ The communication between the system and those service providers is crucial beca
     \item{[R]} The system shall allow the user to select a combination of public transportation in order to minimize his carbon footprint.
 \end{itemize}
 
+\subsubsection{Use Case Diagrams}
+\begin{figure}[H]
+        \includegraphics[scale=0.4]{visitorUseCase.png}
+        \centering
+        \caption{Visitor Use Case}
+    \label{fig:domainModel}
+\end{figure}
+
+\begin{figure}[H]
+        \includegraphics[scale=0.5]{userUseCase.png}
+        \centering
+        \caption{User Use Case}
+    \label{fig:domainModel}
+    \end{figure}
+    
+\newpage
 
 \subsubsection{Use Case Description}
 \paragraph{Visitor Registration}
@@ -193,28 +209,32 @@ The communication between the system and those service providers is crucial beca
         \hline  
         \textbf{Preconditions} & There are no preconditions. \\ 
         \hline
-        \textbf{Events Flow} & \begin{enumerate} 
+        \textbf{Events Flow} & \begin{enumerate}[topsep=0pt]
                             \setlength{\itemsep}{0.5pt}
                             \item The Visitor opens Travlendar application.
-                            \item The Visitor clicks on the "Sign up" button to start the registration process. 
+                            \item The Visitor clicks on the "Sign up" button to start the registration process.
+                            \item The System provides the User a registration form.
                             \item The Visitor fills all the mandatory fields with his data. 
-                            \item The Visitor clicks on the "Register Button".
-                            \item The system saves the data.
+                            \item The Visitor clicks on the "Register Button", submitting the data to the System.
+                            \item The System verifies if all the data are valid.
+                            \item The System saves the data.
+                            \item The System notifies the Visitor that his registration as a User has been completed with success, and redirects him to the Home Screen
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The Visitor ends the registration process successfully and from now on is a user of the system. \\
+        \textbf{Postconditions} & The Visitor ends the registration process successfully and from now on is a User of the System. \\
         \hline
-        \textbf{Exceptions} & \begin{enumerate} 
+        \textbf{Exceptions} & \begin{enumerate}[topsep=0pt]
                             \setlength{\itemsep}{0.5pt}
                             \item The Visitor is already a user. 
                             \item The Visitor doesn't fill all the mandatory fields or fills them with invalid data.
-                            \item The Visitor chooses a username which is already associated with another user.
-                            \item The Visitor chooses an email which is already associated with another user. 
+                            \item The Visitor chooses a username or email which is already associated with another user.
                             \end{enumerate} 
-                            All exceptions are handled notifying the Visitor about the issue and going back to event 2 of the Event Flow described above.\\ 
+                            All exceptions are handled notifying the Visitor about the issue and going back to the applications initial screen.\\ 
         \hline
     \end{tabular}
 \end{center}
+
+\newpage
 
 \paragraph{User Login}
 \begin{center}
@@ -226,17 +246,18 @@ The communication between the system and those service providers is crucial beca
         \hline  
         \textbf{Preconditions} & There are no preconditions. \\ 
         \hline
-        \textbf{Events Flow} & \begin{enumerate} 
+        \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The User opens Travlendar application.
                             \item The User inserts his username and password on the respective fields.
                             \item The User clicks on the "Log In" button.
-                            \item The system redirects the user to the Home Screen screen.
+                            \item The System validates the User credentials.
+                            \item The system redirects the User to the Home Screen.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User is successfully logged in to the system and redirected to the Home Screen. \\
         \hline
-        \textbf{Exceptions} & \begin{enumerate} 
+        \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The User inserts an invalid username or email.
                             \end{enumerate} 
@@ -245,6 +266,7 @@ The communication between the system and those service providers is crucial beca
     \end{tabular}
 \end{center}
 
+\newpage
 
 \paragraph{User creates an appointment}
 
@@ -253,31 +275,36 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Actors} & User \\ 
         \hline
-        \textbf{Goals} & {[G2]} \\ 
+        \textbf{Goals} & {[G2 and G5]} \\ 
         \hline  
         \textbf{Preconditions} & The User must be already logged in. \\ 
         \hline
-        \textbf{Events Flow} & \begin{enumerate} 
+        \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The user clicks on the "New Appointment" button
-                            \item The system shows a form with the required data fields in order for the appointment to be created.
+                            \item The system provides the User a form with the required data fields which need to be filled in order for the appointment to be created.
                             \item The User fills the form.
                             \item The User clicks on the "Create Appointment" button.
+                            \item The System validates the data.
+                            \item The System computes the best new possible arrangement of appointments.
+                            \item The system computes the best travel mean to get to this new appointment.
                             \item The system redirects the user to the Home Screen.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User successfully creates an appointment and is redirected to the Home Screen. \\
         \hline
-        \textbf{Exceptions} & \begin{enumerate} 
+        \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The User creates an appointment which is unreachable.
                             \end{enumerate} 
-                            The exception is handled notifying the User about the issue and going back to event 1 of the Event Flow described above.\\ 
+                            The exception is handled notifying the User about the issue and going back to event 2 of the Event Flow described above.\\ 
         \hline
     \end{tabular}
 \end{center}
 
-\paragraph{User deletes an appointment}
+\newpage
+
+\paragraph{User edits an appointment}
 
 \begin{center}
     \begin{tabular} { |p{0.25\textwidth}|p{0.7\textwidth}| }
@@ -288,20 +315,29 @@ The communication between the system and those service providers is crucial beca
         \hline  
         \textbf{Preconditions} & The User must have created at least one appointment. \\ 
         \hline
-        \textbf{Events Flow} & \begin{enumerate} 
+        \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The user press clicks on the appointment he wants to delete.
-                            \item The system shows a "Delete" button.
-                            \item The User clicks on the "Delete" button.
+                            \item The user clicks on the appointment he wants to edit.
+                            \item The system shows the same form as the one showed when creating an appointment, but with the fields filled with the appointments current data.
+                            \item The User changes the location of the appointment.
+                            \item The User clicks on the "Done" button.
+                            \item The system computes the best new possible arrangement of appointments.
+                            \item The system computes the best travel means to get to the other created appointments, to see if any of those changed with this edition.
+                            \item The system shows the new arrangement of appointments.
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The User successfully deletes an appointment and stays on the Home Screen. \\
+        \textbf{Postconditions} & The User successfully edits an appointment and continues having the best possible appointment arrangement. \\
         \hline
-        \textbf{Exceptions} & There are no exceptions.\\ 
+        \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
+                            \setlength{\itemsep}{0.5pt}
+                            \item The editing of the location of this appointment makes this or some of the others unreachable.
+                            \end{enumerate} 
+                            The exception is handled notifying the User about the issue (and about which appointments are in conflict) and going back to event 2 of the Event Flow described above.\\ 
         \hline
     \end{tabular}
 \end{center}
 
+\newpage
 
 \paragraph{User deactivates Bike Sharing as a travel mean}
 \begin{center}
@@ -313,7 +349,7 @@ The communication between the system and those service providers is crucial beca
         \hline  
         \textbf{Preconditions} & The User must be already logged in. \\ 
         \hline
-        \textbf{Events Flow} & \begin{enumerate} 
+        \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The user clicks on the "Settings" button
                             \item The system shows a slide button form, one for each mean of transportation.
@@ -327,9 +363,6 @@ The communication between the system and those service providers is crucial beca
         \hline
      \end{tabular}
 \end{center}
-
-
-
 
 
 \subsection{Performance Requirements}
@@ -398,7 +431,9 @@ The first release of the system will be available for the mobile platform our ta
   \hline
   19/10/2017 & Use Case Description, Performance Constraints & 2 \\ 
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{22} \\ 
+  20/10/2017 & Goals and requirements, UseCases, UML Diagrams & 3 \\ 
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{25} \\ 
   \hline
 \end{tabular}
 \end{center}
