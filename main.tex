@@ -89,9 +89,15 @@ In the fifth chapter the effort spent by each of the group members is described 
 The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
 Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
     \begin{figure}[H]
-        \includegraphics[scale=0.485]{domainModel.png}
+        \includegraphics[scale=0.27]{domainModel.png}
         \caption{Class Diagram of the domain}
         \centering
+    \label{fig:domainModel}
+    \end{figure}
+    \begin{figure}[H]
+    \centering
+        \includegraphics[scale=0.4]{statechartAppointment.png}
+        \caption{Statechart of an Appointment}
     \label{fig:domainModel}
     \end{figure}
     
@@ -110,7 +116,7 @@ All of these types of users are of working age (20 to 70 years old, being this a
 [D] The username must be unique.\\{}
 [D] The system will have access to the phone GPS functionality.\\{}
 [D] The phone will always have a connection to the internet (WiFi or mobile data).\\{}
-[D4] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.\\{}
+[D] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.\\{}
 [D] The external services used by the system are assumed to be always reachable.\\{}
 [D] Changes on the User preferences only apply to the appointments created after the change. The ones already created stay the same.\\{}
 
@@ -150,7 +156,7 @@ These Mockups represent a basic idea of how the applications user interface will
 
 \begin{figure}[H]
 \centering
-    \includegraphics[scale=0.5]{interfaceSettings.png}
+    \includegraphics[scale=0.45]{interfaceSettings.png}
     \caption{Settings Screen}
 \label{fig:settingsScreen}
 \end{figure}
@@ -218,13 +224,17 @@ The communication between the system and those service providers is crucial beca
     \item{[R]} The system shall allow the user to select a combination of public transportation in order to minimize his carbon footprint.
 \end{itemize}
 
+\newpage
 \subsubsection{Use Case Diagrams}
+
+
 \begin{figure}[H]
         \includegraphics[scale=0.4]{visitorUseCase.png}
         \centering
         \caption{Visitor Use Case}
     \label{fig:visitorUseCase}
 \end{figure}
+
 
 \begin{figure}[H]
         \includegraphics[scale=0.5]{userUseCase.png}
