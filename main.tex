@@ -7,6 +7,8 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{enumitem}
+\usepackage[top=1.5in]{geometry}
+\usepackage{subcaption}
 \graphicspath{ {images/} }
 
 
@@ -63,7 +65,8 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{Flexible Appointment}: An appointment which the start and end date may change between a given time range (are flexible).
 \subsubsection{Acronyms}
 \textit{API}: Application Programming Interface\\
-\textit{RASD}: Requirements Analysis and Specification Document
+\textit{RASD}: Requirements Analysis and Specification Document\\
+\textit{BPMN}: Business Process Model and Notation
 \subsubsection{Abbreviations}
 \textit{Gn}: Goal defined with index n.\\
 \textit{Dn}: Domain Assumption defined with index n.\\
@@ -104,11 +107,12 @@ The system aims at satisfying the needs of many different types of users. The fi
 All of these types of users are of working age (20 to 70 years old, being this a small deviation of the official definition, which is from 15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and know how to use a smartphone.
 
 \subsection{Assumptions, dependencies and constraints}
-[D1] The username must be unique.\\{}
-[D2] The system will have access to the phone GPS functionality.\\{}
-[D3] The phone will always have a connection to the internet (WiFi or mobile data).\\{}
+[D] The username must be unique.\\{}
+[D] The system will have access to the phone GPS functionality.\\{}
+[D] The phone will always have a connection to the internet (WiFi or mobile data).\\{}
 [D4] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.\\{}
-[D5] The external services used by the system are assumed to be always reachable.\\{}
+[D] The external services used by the system are assumed to be always reachable.\\{}
+[D] Changes on the User preferences only apply to the appointments created after the change. The ones already created stay the same.\\{}
 
 
 \section{Specific Requirements}
@@ -117,6 +121,40 @@ All of these types of users are of working age (20 to 70 years old, being this a
 
 \subsubsection{User Interfaces}
 These Mockups represent a basic idea of how the applications user interface will look like on the first release.
+
+\begin{figure}[H]
+\centering
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.47]{interfaceLogin.png}
+        \label{fig:loginScreen}
+    \end{subfigure}%
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.45]{interfaceRegister.png}
+        \label{fig:registerScreen}
+    \end{subfigure}
+    \caption{Login Screen (left) and Register Screen (right)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.45]{interfaceHome.png}
+        \label{fig:homeScreen}
+    \end{subfigure}%
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.47]{interfaceAppointment.png}
+        \label{fig:appointmentScreen}
+    \end{subfigure}
+    \caption{Home Screen (left) and New/Edit Appointment Screen (right)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+    \includegraphics[scale=0.5]{interfaceSettings.png}
+    \caption{Settings Screen}
+\label{fig:settingsScreen}
+\end{figure}
+
 
 \subsubsection{Hardware Interfaces}
 In the first release no Hardware Interfaces will be necessary, since the system doesn't need to interact physically with other systems.
@@ -185,15 +223,15 @@ The communication between the system and those service providers is crucial beca
         \includegraphics[scale=0.4]{visitorUseCase.png}
         \centering
         \caption{Visitor Use Case}
-    \label{fig:domainModel}
+    \label{fig:visitorUseCase}
 \end{figure}
 
 \begin{figure}[H]
         \includegraphics[scale=0.5]{userUseCase.png}
         \centering
         \caption{User Use Case}
-    \label{fig:domainModel}
-    \end{figure}
+    \label{fig:userUseCase}
+\end{figure}
     
 \newpage
 
@@ -213,8 +251,8 @@ The communication between the system and those service providers is crucial beca
                             \setlength{\itemsep}{0.5pt}
                             \item The Visitor opens Travlendar application.
                             \item The Visitor clicks on the "Sign up" button to start the registration process.
-                            \item The System provides the User a registration form.
-                            \item The Visitor fills all the mandatory fields with his data. 
+                            \item The System provides the Visitor a form with the required data fields which need to be filled in order for him to be registered as a User.
+                            \item The Visitor fills the fields with his data. 
                             \item The Visitor clicks on the "Register Button", submitting the data to the System.
                             \item The System verifies if all the data are valid.
                             \item The System saves the data.
@@ -252,7 +290,7 @@ The communication between the system and those service providers is crucial beca
                             \item The User inserts his username and password on the respective fields.
                             \item The User clicks on the "Log In" button.
                             \item The System validates the User credentials.
-                            \item The system redirects the User to the Home Screen.
+                            \item The System redirects the User to the Home Screen.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User is successfully logged in to the system and redirected to the Home Screen. \\
@@ -281,20 +319,22 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The user clicks on the "New Appointment" button
-                            \item The system provides the User a form with the required data fields which need to be filled in order for the appointment to be created.
+                            \item The User clicks on the "New Appointment" button
+                            \item The System provides the User a form with the required data fields which need to be filled in order for the appointment to be created.
                             \item The User fills the form.
                             \item The User clicks on the "Create Appointment" button.
                             \item The System validates the data.
                             \item The System computes the best new possible arrangement of appointments.
-                            \item The system computes the best travel mean to get to this new appointment.
-                            \item The system redirects the user to the Home Screen.
+                            \item The System computes the best travel mean to get to this new appointment.
+                            \item The System saves the data.
+                            \item The System redirects the user to the Home Screen.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User successfully creates an appointment and is redirected to the Home Screen. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
+                            \item The User inserts an invalid Location.
                             \item The User creates an appointment which is unreachable.
                             \end{enumerate} 
                             The exception is handled notifying the User about the issue and going back to event 2 of the Event Flow described above.\\ 
@@ -321,15 +361,18 @@ The communication between the system and those service providers is crucial beca
                             \item The system shows the same form as the one showed when creating an appointment, but with the fields filled with the appointments current data.
                             \item The User changes the location of the appointment.
                             \item The User clicks on the "Done" button.
-                            \item The system computes the best new possible arrangement of appointments.
-                            \item The system computes the best travel means to get to the other created appointments, to see if any of those changed with this edition.
-                            \item The system shows the new arrangement of appointments.
+                            \item The System validates the data.
+                            \item The System computes the best new possible arrangement of appointments.
+                            \item The System computes the best travel means to get to the other created appointments, to see if any of those changed with this edition.
+                            \item The System saves the data.
+                            \item The System shows the new arrangement of appointments.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User successfully edits an appointment and continues having the best possible appointment arrangement. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
+                            \item The User inserts an invalid Location.
                             \item The editing of the location of this appointment makes this or some of the others unreachable.
                             \end{enumerate} 
                             The exception is handled notifying the User about the issue (and about which appointments are in conflict) and going back to event 2 of the Event Flow described above.\\ 
@@ -352,9 +395,10 @@ The communication between the system and those service providers is crucial beca
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The user clicks on the "Settings" button
-                            \item The system shows a slide button form, one for each mean of transportation.
+                            \item The System shows a slide button form, one for each mean of transportation.
                             \item The User sets the Bike Sharing slide button to deactivated.
                             \item The User clicks on the "Done" button.
+                            \item The System saves the data.
                             \end{enumerate} \\
         \hline
         \textbf{Postconditions} & The User successfully deactivated Bike Sharing as a mean of transportation and is redirected to the Home Screen. \\
@@ -363,6 +407,22 @@ The communication between the system and those service providers is crucial beca
         \hline
      \end{tabular}
 \end{center}
+
+\subsubsection{BPMN Diagrams}
+
+\begin{figure}[H]
+        \includegraphics[scale=0.55, angle=-90, origin=c]{BPMNvisitorRegistration.png}
+        \centering
+        \caption{Visitor Registration}
+    \label{fig:visitorRegistrationBPMN}
+\end{figure}
+
+\begin{figure}[H]
+        \includegraphics[scale=0.46, angle=-90, origin=c]{BPMNeditAppointment.png}
+        \centering
+        \caption{User Edits Appointment}
+    \label{fig:visitorRegistrationBPMN}
+\end{figure}
 
 
 \subsection{Performance Requirements}
@@ -381,8 +441,6 @@ The system must require the users permission to provide their location, preferen
 
 \subsubsection{Hardware Limitations}
 The user will need a mobile phone with GPS and Wi-fi/Mobile Data always on when using the app, other than the obvious space for the application package.
-
-\subsubsection{Any other Constraint}
 
 \subsection{Software System Attributes}
 
@@ -433,7 +491,9 @@ The first release of the system will be available for the mobile platform our ta
   \hline
   20/10/2017 & Goals and requirements, UseCases, UML Diagrams & 3 \\ 
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{25} \\ 
+  21/10/2017 & BPMN Diagrams, Goals and Requirements, User Interface & 2 \\ 
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{27} \\ 
   \hline
 \end{tabular}
 \end{center}
