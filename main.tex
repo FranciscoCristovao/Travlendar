@@ -33,7 +33,7 @@
     \begin{flushleft}
         \LARGE\textbf{Authors: }
         \newline\newline
-        \Large\texttt{}{Francisco Cristóvão \\ Samsom Beyene}
+        \Large\texttt{}{Francisco Cristóvão \\ Samsom Tsegay Beyene}
     \end{flushleft}
 
 
@@ -48,15 +48,16 @@
 
 \subsection{Purpose}
 
-The main goal of this project is to create a calendar-based application which provides the user a flexible and fully-featured calendar support that considers the travel time between meetings. With this in tmind, the application will:
+The main goal of this project is to create a calendar-based system which provides the user a flexible and fully-featured calendar support that considers the travel time between meetings. With this in mind, the application will:
 \begin{itemize}
-\item compute and account for travel time between appointments, and prevent conflicts between them
-\item support the user in his/her travels, adding automatically the travel time to the calendar between meetings, and suggesting the best travel option based on the available time
+\item Compute and account for travel time between appointments, and prevent conflicts between them.
+\item Support the user in his/her travels, adding automatically the travel time to the calendar between meetings, and suggesting the best travel option based on the available time.
+\item Plan the User schedule in the best and most efficient way.
 \end{itemize}
 
 \subsection{Scope}
-Travlendar+ is a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. This application was not only thought for the regular businessman/businesswoman, who travel in between meetings the whole day and have no time to spare, but also for the parents with a more regular daily schedule, who just want to get the best of their time while being able to pick their kids from school and take them to other activities, always being on time.
-Of course the system will fully support the features of a regular calendar application (booking of appointments in a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment). The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
+Travlendar+ is a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. This application was not only thought for the regular businessman/businesswoman, who travel in between meetings the whole day and have no time to spare, but also for the parents with a more regular daily schedule, who just want to get the best out of their time while being able to pick their kids from school and take them to other activities, always being on time.
+Of course the system will fully support the features of a regular calendar application (booking of appointments in a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment) and arranging all of the appointments in the best possible way. The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
 
 
 \subsection{Definitions, Acronyms, Abbreviations}
@@ -64,12 +65,14 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{Visitor}: A person who uses Travlendar+ for the first time, and is not yet registered.\\
 \textit{User}: A person who uses Travlendar+.\\
 \textit{Home Screen}: User interface screen that shows the current appointments.\\
-\textit{Flexible Appointment}: An appointment which the start and end date may change between a given time range (are flexible).\\
-\textit{System}: defines the overall set of software components that implement the required functionalities.
+\textit{Flexible Appointment}: An appointment which the start and end date may change between a given time range (are flexible), as long as its minimum duration is ensured.\\
+\textit{System}: defines the overall set of software components that implement the required functionality.\\
 \textit{Local Time}: time of the system.
 \subsubsection{Acronyms}
 \textit{API}: Application Programming Interface\\
 \textit{RASD}: Requirements Analysis and Specification Document\\
+\textit{ATM: Azienda Trasporti Milanesi}\\
+\textit{SQL}: Structured Query Language\\
 \textit{BPMN}: Business Process Model and Notation
 \subsubsection{Abbreviations}
 \textit{Gn}: Goal defined with index n.\\
@@ -88,24 +91,24 @@ Version 1.0: Initial Release
 
 
 \subsection{Document Structure}
-Other than this introductory chapter, this RASD is organized in five more chapters. Chapter two is meant to provide an overview of the systems functionality, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned above) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
+Other than this introductory chapter, this RASD is organized in six more chapters. Chapter two is meant to provide an overview of the systems functionality, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
 The fourth chapter deals with the formal analysis of the system using an Alloy model. It includes the Alloy model of the system with a brief discussion on its purpose and on the relevance of using Alloy as a tool to validate our solution, given the problem we had to solve.
-In the fifth chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document.
+In the fifth chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this RASD are specified.
 
 \section{Overall Description}
 
 \subsection{Product Perspective}
-The application will need to communicate with both Public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information helps the application to exactly locate the position of the user and meeting place so that it can assign the travel means with its calculated time. In addition, the application also retrieves the weather conditions while making some decisions. 
-Since this application is data centric product it will need somewhere to store the schedules. For that a database is used. So the mobile application will communicate with the database (probably distributed database) to add, modify or view the schedule. All the database communication will go over the Internet.
+The system will need to communicate with both public transport systems, bike or car sharing system of the city and Google maps API to find the exact status of available (active) types of transportation with their corresponding locations. These information helps the System to exactly locate the position of the user and the appointments place so that it can assign the best travel means to get to the referred appointment. In addition, the System also retrieves the weather conditions and takes them into consideration when choosing the travel mean.
+Since this system relies on data storage to work, it will need some alternative to store this data. So, the system will communicate with the database (probably distributed) to add or modify the appointments, as well as the user details and preferences. All the database communication will go over the Internet.
     \begin{figure}[H]
-        \includegraphics[scale=0.27]{domainModel.png}
+        \includegraphics[scale=0.3]{domainModel.png}
         \caption{Class Diagram of the domain}
         \centering
     \label{fig:domainModel}
     \end{figure}
     \begin{figure}[H]
     \centering
-        \includegraphics[scale=0.4]{statechartAppointment.png}
+        \includegraphics[scale=0.33]{statechartAppointment.png}
         \caption{Statechart of an Appointment}
     \label{fig:domainModel}
     \end{figure}
@@ -118,8 +121,8 @@ The main functions supported by the system will be:
 \end{itemize}
 
 \subsection{User Characteristics}
-The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, the user that is always in a tight schedule and needs a tool like our system to simplify the way he books and turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
-All of these types of users are of working age (20 to 70 years old, being this a small deviation of the official definition, which is from 15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and are expected to know how to use a smartphone with reasonable proficiency.
+The system aims at satisfying the needs of many different types of users. The first type is the "businessman" user, the user that is always in a tight schedule and needs a tool like our system to simplify and improve the way he organizes his schedule and the way turns up to the appointments. The second type is the opposite of the "businessman" user. It's a user that has a less busy life and only needs the system to remind him of the appointments without having to worry about how to get there or when to leave to arrive on time. There's also a third type of user which is placed in between the two described previously: also has a tight office schedule but still has time for personal activities, and needs the system to help him reach this balance in the most efficient way.
+All of these types of users are of working age (20 to 70 years old, being this a small deviation of the official definition, which is from 15 to 64 years old)\footnote{Definition from OECD: https://data.oecd.org/pop/working-age-population.htm} and are expected to know how to use a smartphone with reasonable proficiency. It's easy to see that the needs of the users will map directly to the goals of the system, most precisely to G5, which is the more general and "different" from the similar applications already on the market, and the one the users are looking more forward to.
 
 \subsection{Assumptions, dependencies and constraints}
 [D1] The username and email must be unique.\\{}
@@ -128,9 +131,12 @@ All of these types of users are of working age (20 to 70 years old, being this a
 [D4] The best route and travel mean to get to an appointment will always be computed correctly.\\{}
 [D5] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.\\{}
 [D6] The external services used by the system are assumed to be always available and reachable.\\{}
-[D7] Changes on the User preferences only apply to the appointments created after the change. The ones already created stay the same.\\{}
+[D7] Changes on the user preferences only apply to the appointments created after the change. The ones already created stay the same.\\{}
 [D8] Two different users are not allowed to interact with each other.\\{}
-[D9] Flexible Appointment minimum duration has to be greater than its time range.\\{}
+[D9] The best travel means to get to an appointment won't change if the appointments don't change.\\{}
+[D10] Users don't need to confirm if they started or finished the appointment.\\{}
+[D11] An Appointment maps to only one User.\\{}
+[D12] The location of the users private car and bike is always known by the system.\\{}
 
 
 \section{Specific Requirements}
@@ -138,7 +144,7 @@ All of these types of users are of working age (20 to 70 years old, being this a
 \subsection{External Interface Requirements}
 
 \subsubsection{User Interfaces}
-These Mockups represent a basic idea of how the applications user interface will look like on the first release.
+These Mockups represent a basic idea of how the systems user interface will look like on the first release (mobile application):
 
 \begin{figure}[H]
 \centering
@@ -156,21 +162,27 @@ These Mockups represent a basic idea of how the applications user interface will
 \begin{figure}[H]
 \centering
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.45]{interfaceHome.png}
+        \includegraphics[scale=0.31]{interfaceHome.png}
         \label{fig:homeScreen}
     \end{subfigure}%
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.47]{interfaceAppointment.png}
-        \label{fig:appointmentScreen}
+        \includegraphics[scale=0.32]{interfaceAppointment.png}
+        \label{fig:newAppointmentScreen}
     \end{subfigure}
-    \caption{Home Screen (left) and New/Edit Appointment Screen (right)}
+    \caption{Home Screen (left) and Appointment Details Screen (right)}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-    \includegraphics[scale=0.45]{interfaceSettings.png}
-    \caption{Settings Screen}
-\label{fig:settingsScreen}
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.43]{interfaceNewAppointment.png}
+        \label{fig:appointmentScreen}
+    \end{subfigure}%
+    \begin{subfigure}{.4\textwidth}
+        \includegraphics[scale=0.465]{interfaceSettings.png}
+        \label{fig:settingsScreen}
+    \end{subfigure}
+    \caption{New Appointment Screen (left) and Settings Screen (right)}
 \end{figure}
 
 
@@ -178,10 +190,10 @@ These Mockups represent a basic idea of how the applications user interface will
 In the first release no Hardware Interfaces will be necessary, since the system doesn't need to interact physically with other systems.
 
 \subsubsection{Software Interfaces}
-Given the wide range of features the system offers, it will need to have several software interfaces. There has to be a way of storing all the user-related data (mainly login and preferences data). In that sense, the system will use a \textbf{MySQL API} to connect with a MySQL database server, where all the app data will be stored.\\
+Given the wide range of features the system offers, it will need to have several software interfaces. There has to be a way of storing all the user-related data (mainly login, preferences and appointments data). In that sense, the system will use a \textbf{MySQL API} to connect with a MySQL database server, where all the app data will be stored.\\
 The system will also need different kinds of information about the users location and its surrounding, in order to compute the travel time between appointments. To support this functionality, the system will use \textbf{Google Maps Geolocation API} and \textbf{Google Maps API}. The first one will provide information about the user exact location and the second one will provide the real-time information about maps and traffic, and allow it to calculate the best route between two different appointments.\\
-To have access to the current weather, the system will use \textbf{AccuWeather API}, which will provide information about the current weather either where the user is or where the user is going.
-At last, the system also needs to get all sorts of information from many different travel means. In order to get these information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Mobike API} (for the bike sharing system).
+To have access to the current weather, the system will use \textbf{AccuWeather API}, which will provide information about the current weather on both where the user is and where the appointment is located.
+At last, the system will also need to get all sorts of information from many different travel means. In order to get these information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Mobike API} (for the bike sharing system).
 
 
 
@@ -195,7 +207,7 @@ The communication between the system and those service providers is crucial beca
 \begin{itemize}
     \item{[R1]} The system shall allow the visitor to begin the registration process when he accesses the system. 
     \item{[R2]} The system shall ask the visitor for the required information and credentials during the registration process.
-    \item{[R4]} The system shall register the visitor as a user when the registration process ends.
+    \item{[R4]} The system shall register the visitor as a user when the registration process ends, if all the data inserted by the user is valid.
 \end{itemize}
 {[G2]} Allow a logged user to create an appointment.
 \begin{itemize}
@@ -206,6 +218,7 @@ The communication between the system and those service providers is crucial beca
     \item{[R9]} The system shall allow the user to select if the appointment is flexible or not.
     \item{[R10]} The system shall create the appointment if all the data inserted by the user is valid.
 \end{itemize}
+
 {[G3]} Allow a logged user to edit an appointment.
 \begin{itemize}
     \item{[R11]} The system shall allow the user to edit all the provided information about the appointment.
@@ -220,7 +233,7 @@ The communication between the system and those service providers is crucial beca
 \end{itemize}
 {[G5]} Allow a logged user to have his schedule planned in the best possible way.
 \begin{itemize}
-    \item{[R15]} The system shall compute the best possible arrangement of the user's appointments that fulfills his/her preferences.
+    \item{[R15]} The system shall compute the best possible arrangement of the users appointments that fulfills his/her preferences.
     \item{[R6]} The system shall not allow two appointments to overlap.
     \item{[R16]} The system shall compute the best travel mean to get to each appointment.
     \item{[R17]} The system shall re-plan the users schedule every time an appointment is inserted, deleted or its location and/or date is changed.
@@ -250,7 +263,7 @@ The communication between the system and those service providers is crucial beca
 
 
 \begin{figure}[H]
-        \includegraphics[scale=0.5]{userUseCase.png}
+        \includegraphics[scale=0.23]{userUseCase.png}
         \centering
         \caption{User Use Case}
     \label{fig:userUseCase}
@@ -272,25 +285,25 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt]
                             \setlength{\itemsep}{0.5pt}
-                            \item The Visitor opens Travlendar+ application.
-                            \item The Visitor clicks on the "Sign up" button to start the registration process.
-                            \item The System provides the Visitor a form with the required data fields which need to be filled in order for him to be registered as a User.
-                            \item The Visitor fills the fields with his data. 
-                            \item The Visitor clicks on the "Register Button", submitting the data to the System.
-                            \item The System verifies if all the data are valid.
-                            \item The System saves the data.
-                            \item The System notifies the Visitor that his registration as a User has been completed with success, and redirects him to the Home Screen
+                            \item The visitor opens Travlendar+ application.
+                            \item The visitor clicks on the "Sign up" button to start the registration process.
+                            \item The system provides the Visitor a form with the required data fields which need to be filled in order for him to be registered as a user.
+                            \item The visitor fills the fields with his data. 
+                            \item The visitor clicks on the "Register Button", submitting the data to the system.
+                            \item The system verifies if all the data are valid.
+                            \item The system saves the data.
+                            \item The system notifies the Visitor that his registration as a user has been completed with success, and redirects him to the Home Screen
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The Visitor ends the registration process successfully and from now on is a User of the System. \\
+        \textbf{Postconditions} & The visitor ends the registration process successfully and from now on is a user of the system. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt]
                             \setlength{\itemsep}{0.5pt}
-                            \item The Visitor is already a user. 
-                            \item The Visitor doesn't fill all the mandatory fields or fills them with invalid data.
-                            \item The Visitor chooses a username or email which is already associated with another user.
+                            \item The visitor is already a user. 
+                            \item The visitor doesn't fill all the mandatory fields or fills them with invalid data.
+                            \item The visitor chooses a username or email which is already associated with another user.
                             \end{enumerate} 
-                            All exceptions are handled notifying the Visitor about the issue and going back to the applications initial screen.\\ 
+                            All exceptions are handled notifying the visitor about the issue and going back to the applications initial screen.\\ 
         \hline
     \end{tabular}
 \end{center}
@@ -309,18 +322,18 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The User opens Travlendar+ application.
-                            \item The User inserts his username and password on the respective fields.
-                            \item The User clicks on the "Log In" button.
-                            \item The System validates the User credentials.
-                            \item The System redirects the User to the Home Screen.
+                            \item The user opens Travlendar+ application.
+                            \item The user inserts his username and password on the respective fields.
+                            \item The user clicks on the "Log In" button.
+                            \item The system validates the user credentials.
+                            \item The system redirects the user to the Home Screen.
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The User is successfully logged in to the system and redirected to the Home Screen. \\
+        \textbf{Postconditions} & The user is successfully logged in to the system and redirected to the Home Screen. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The User inserts an invalid username or email.
+                            \item The user inserts an invalid username or email.
                             \end{enumerate} 
                             All exceptions are handled notifying the User about the issue and going back to event 2 of the Event Flow described above.\\ 
         \hline
@@ -342,25 +355,25 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The User clicks on the "New Appointment" button
-                            \item The System provides the User a form with the required data fields which need to be filled in order for the appointment to be created.
-                            \item The User fills the form.
-                            \item The User clicks on the "Create Appointment" button.
-                            \item The System validates the data.
-                            \item The System computes the best new possible arrangement of appointments.
-                            \item The System computes the best travel means to get to this new appointment.
-                            \item The System saves the data.
-                            \item The System redirects the user to the Home Screen.
+                            \item The user clicks on the "New Appointment" button
+                            \item The system provides the user a form with the required data fields which need to be filled in order for the appointment to be created.
+                            \item The user fills the form.
+                            \item The user clicks on the "Create Appointment" button.
+                            \item The system validates the data.
+                            \item The system computes the best new possible arrangement of appointments.
+                            \item The system computes the best travel means to get to this new appointment.
+                            \item The system saves the data.
+                            \item The system redirects the user to the Home Screen.
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The User successfully creates an appointment and continues having the best possible appointment arrangement. \\
+        \textbf{Postconditions} & The user successfully creates an appointment and continues having the best possible appointment arrangement. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The User inserts an invalid Location.
-                            \item The User creates an appointment which is unreachable.
+                            \item The user inserts an invalid Location.
+                            \item The user creates an appointment which is unreachable.
                             \end{enumerate} 
-                            The exception is handled notifying the User about the issue and going back to event 2 of the Event Flow described above.\\ 
+                            The exceptions are handled notifying the user about the issue and going back to event 2 of the Event Flow described above.\\ 
         \hline
     \end{tabular}
 \end{center}
@@ -374,7 +387,7 @@ The communication between the system and those service providers is crucial beca
         \hline
         \textbf{Actors} & User \\ 
         \hline
-        \textbf{Goals} & {[G4 and G5]} \\ 
+        \textbf{Goals} & {[G3 and G5]} \\ 
         \hline  
         \textbf{Preconditions} & The User must have created at least one appointment. \\ 
         \hline
@@ -382,24 +395,24 @@ The communication between the system and those service providers is crucial beca
                             \setlength{\itemsep}{0.5pt}
                             \item The user clicks on the appointment he wants to edit.
                             \item The system shows the same form as the one showed when creating an appointment, but with the fields filled with the appointments current data.
-                            \item The User clicks on the "Edit" button.
-                            \item The User changes the location of the appointment.
-                            \item The User clicks on the "Done" button.
-                            \item The System validates the data.
-                            \item The System computes the best new possible arrangement of appointments.
-                            \item The System computes the best travel means to get to the other created appointments, to see if any of those changed with this change.
-                            \item The System saves the data.
-                            \item The System shows the new arrangement of appointments.
+                            \item The user clicks on the "Edit" button.
+                            \item The user changes the location of the appointment.
+                            \item The user clicks on the "Done" button.
+                            \item The system validates the data.
+                            \item The system computes the best new possible arrangement of appointments.
+                            \item The system computes the best travel means to get to the other created appointments, to see if any of those changed with this change.
+                            \item The system saves the data.
+                            \item The system shows the new arrangement of appointments.
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The User successfully edits an appointment and continues having the best possible appointment arrangement. \\
+        \textbf{Postconditions} & The user successfully edits an appointment and continues having the best possible appointment arrangement. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
-                            \item The User inserts an invalid Location.
-                            \item The editing of the location of this appointment makes this or some of the others unreachable.
+                            \item The user inserts an invalid Location.
+                            \item The editing of the location of this appointment makes this or some of the other appointments unreachable.
                             \end{enumerate} 
-                            The exception is handled notifying the User about the issue (and about which appointments are in conflict) and going back to event 2 of the Event Flow described above.\\ 
+                            The exceptions are handled notifying the user about the issue (and about which appointments are in conflict if that's the case) and going back to event 2 of the Event Flow described above.\\ 
         \hline
     \end{tabular}
 \end{center}
@@ -419,13 +432,13 @@ The communication between the system and those service providers is crucial beca
         \textbf{Events Flow} & \begin{enumerate}[topsep=0pt] 
                             \setlength{\itemsep}{0.5pt}
                             \item The user clicks on the "Settings" button
-                            \item The System shows a slide button form, one for each mean of transportation.
-                            \item The User sets the Bike Sharing slide button to deactivated.
+                            \item The system shows a slide button form, one for each mean of transportation.
+                            \item The user sets the Bike Sharing slide button to deactivated.
                             \item The User clicks on the "Done" button.
                             \item The System saves the data.
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The User successfully deactivated Bike Sharing as a mean of transportation and is redirected to the Home Screen. \\
+        \textbf{Postconditions} & The user successfully deactivated Bike Sharing as a travel mean and is redirected to the Home Screen. \\
         \hline
         \textbf{Exceptions} & There are no exceptions.\\ 
         \hline
@@ -450,11 +463,11 @@ The communication between the system and those service providers is crucial beca
 
 
 \subsection{Performance Requirements}
-The system has to be able to respond to a possibly large number of requests (depending on the amount of users the system will have). Taking into account other (less powerful but widely used) calendar and transport applications, an infrastructure that supports a maximum workload on the order of hundreds of thousands of requests shall be enough to satisfy all the possible simultaneous requests after the release. The infrastructure must have a good Scalability in order to increase the maximum workload in case the user base increases too. The response times of the system shall be\footnote{According to Jakon Nielsen book on Usability}:
+The system has to be able to respond to a possibly large number of requests (depending on the amount of users the system will have). Taking into account other (less powerful but widely used) calendar and transport applications, an infrastructure that supports a maximum workload on the order of hundreds of thousands of requests shall be enough to satisfy all the possible simultaneous requests after the release. The infrastructure must have a good scalability in order to increase the maximum workload in case the user base increases too. The response times of the system shall be\footnote{According to Jakon Nielsen book on Usability}:
 \begin{itemize}
     \item 0.1 second for the tasks that require almost no computing power (changing menus in the systems case), in order for the user to feel that the system is reacting instantaneously
     \item 1 second for the tasks that require a normal amount of computing power, in order for the user's flow of thought to stay uninterrupted (deleting an appointment in the systems case)
-    \item 10 second for the task that require significant computing power, in order to keep the user's attention focused on the dialogue(computing the best travel route and consequent travel mean to get to an appointment in the systems case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
+    \item 10 second for the tasks that require significant computing power, in order to keep the user's attention (computing the best travel route and consequent travel mean to get to an appointment in the systems case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
 \end{itemize}
 N.B. A user is assumed to have a stable internet connection in order to achieve these response times.
 
@@ -469,7 +482,7 @@ The user will need a mobile phone with GPS and Wi-fi/Mobile Data always on when 
 \subsection{Software System Attributes}
 
 \subsubsection{Reliability}
-In order to keep maintenance costs low, the System should offer a high level of reliability (no key component of the system may fail more than once a year). 
+In order to keep maintenance costs low, the system should offer a high level of reliability (no key component of the system may fail more than once a year). 
 
 \subsubsection{Availability}
 The system is required to have an availability of 99.99\%. This means that it’s acceptable for the system to have a downtime of up to 1 hour every year caused by a system malfunction.
@@ -481,12 +494,12 @@ Users credentials and payment information are critical data that will be stored 
 To measure the systems maintainability a metric shall be used. This metric needs to be tracked during the development and kept as low as possible, in order to avoid high maintainability costs subsequently. It's obvious that the system must have a high maintainability, which means that the probability of performing a successful repair action within a given (necessary) time must be high (higher than 95\%).
 
 \subsubsection{Portability}
-The first release of the system will be available for the mobile platform our target users use the most, IOS. Nonetheless, an Android version shall be released soom, and even a new platform may arise. So it's crucial that the system is built in a way which makes it easy to deploy in different platforms. The portability measure consists on the cost that deploying the system in a new platform implies, and in this case, this cost should be smaller than the cost of deploying other similar apps.
+The first release of the system will be available for the mobile platform our target users use the most, IOS. Nonetheless, an Android version shall be released soon, and even a new platform may arise. So, it's crucial that the system is built in a way which makes it easy to deploy in different platforms. The portability measure consists on the cost that deploying the system in a new platform implies, and in this case, this cost should be smaller than the cost of deploying other similar apps.
 
 \section{Formal Analysis Using Alloy}
-In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them, and it should be seen as an attempt to capture the System essential features.
+In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them, and is to be seen as an attempt of capturing the systems essential features.
 This model has the purpose of verifying if the properties defined for the system are being satisfied and if there are no constraints being violated.
-In this model it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same and that only the status of two fixed appointments have to be different (the fact that a flexible appointment didn't start but the Local Time is already in the possible interval that it can start was considered an implementation detail, to difficult if even possible to represent in Alloy). Although this model is a simplified version of the "real world", it is enough to show that the model stands (including all of the details would only increase complexity). 
+In this model it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same and that only the status of two fixed appointments have to be different (the fact that a flexible appointment didn't start but the Local Time is already in the possible interval that it can start was considered an implementation detail, too difficult if even possible to represent in Alloy, and so two Flexible Appointments can be in the "started" state). Although this model is a simplified version of the "real world", it is enough to show that the model stands in the scope of the project (including all of the details would only increase complexity). 
 
 
 \begin{verbatim}
@@ -556,6 +569,7 @@ sig Preferences{
     maxWalkingDistance: one Int,
     publicTransportActive: one Bool
 }{maxWalkingDistance > 0}
+
 
 /*FACTS*/
 
@@ -702,7 +716,14 @@ run show for 5 but 5 int
 \begin{figure}[H]
         \includegraphics[scale=0.46, angle=-90, origin=c]{generatedWorld1.png}
         \centering
-        \caption{Generated World Sample}
+        \caption{Generated World 1}
+    \label{fig:execDetail}
+\end{figure}
+
+\begin{figure}[H]
+        \includegraphics[scale=0.46, angle=-90, origin=c]{generatedWorld2.png}
+        \centering
+        \caption{Generated World 2}
     \label{fig:execDetail}
 \end{figure}
 
@@ -740,15 +761,15 @@ run show for 5 but 5 int
   \hline
   24/10/2017 & Alloy & 2 \\ 
   \hline
-  25/10/2017 & Alloy & 2 \\ 
+  25/10/2017 & Alloy & 3 \\ 
   \hline
   26/10/2017 & Alloy and General Document Aspects & 3 \\ 
   \hline
   27/10/2017 & Alloy & 6 \\ 
   \hline
-  28/10/2017 & Alloy and Final details & 3 \\ 
+  28/10/2017 & Alloy and Final details & 4 \\ 
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{43} \\ 
+  \textbf{TOTAL} & \multicolumn{2}{c|}{45} \\ 
   \hline
 \end{tabular}
 \end{center}
@@ -772,7 +793,7 @@ run show for 5 but 5 int
  \hline
  13/10/2017 & Communication Interface & 1 \\
  \hline
- 14/10/2017 & Use Case Diagrams & 4 \\
+ 14/10/2017 & Use Case Diagrams & 3 \\
  \hline
  16/10/2017 & Goals and Requirements, Use case Description & 2 \\
  \hline
@@ -782,17 +803,36 @@ run show for 5 but 5 int
  \hline
  27/10/2017 & RASD Final Review & 2 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{26} \\ 
+  \textbf{TOTAL} & \multicolumn{2}{c|}{24} \\ 
   \hline
 \end{tabular}
 \end{center}
 
-\section{References}
-https://belitsoft.com/php-development-services/software-requirements-specification-document-example-international-standard\\
-https://en.wikipedia.org/wiki/Portability_testing\\
-https://en.wikipedia.org/wiki/Maintainability\\
-https://en.wikipedia.org/wiki/Software_reliability_testing
-Jakon Nielsen book on Usability - response intervals data 
-http://www.enforcive.com/regulatory-compliance-software
+\section{Used Tools}
+\begin{itemize}
+    \item ShareLateX
+    \item StarUML 2.8.0
+    \item Sketch 47.1
+    \item Alloy Analyzer 4.2
+\end{itemize}
 
+\section{References}
+
+\begin{thebibliography}{9}
+\bibitem{belisoft} 
+https://belitsoft.com/php-development-services/software-requirements-specification-document-example-international-standard
+\bibitem{portability} 
+https://en.wikipedia.org/wiki/Portability\_testing
+\bibitem{maintainability} 
+https://en.wikipedia.org/wiki/Maintainability
+\bibitem{reliability} 
+https://en.wikipedia.org/wiki/Software\_reliability\_testing
+\bibitem{Nilson} 
+Nielsen, Jakob, Budiu, Raluca. \textit{Mobile Usability, 1st Edition}
+\bibitem{compliance}
+http://www.enforcive.com/regulatory-compliance-software
+\bibitem{data}
+https://data.oecd.org/pop/working-age-population.htm
+
+\end{thebibliography}
 \end{document}
