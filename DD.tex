@@ -1,0 +1,99 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\pagenumbering{arabic}
+\usepackage{graphicx}
+\usepackage{amstext}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage{array}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage[top=1.5in]{geometry}
+\usepackage{subcaption}
+\graphicspath{ {images/} }
+
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{logoPolimi.png}
+        \vspace{1.5cm}
+    \end{figure}
+
+    \Huge\textbf{Software Engineering 2 Project - Travlendar+}
+    \rule{12cm}{0.5pt}
+    \Huge\textbf{Design Document - V1}
+    \today
+    \end{center}
+    
+    \vspace{3cm}
+    
+    \begin{flushleft}
+        \LARGE\textbf{Authors: }
+        \newline\newline
+        \Large\texttt{}{Francisco Cristóvão \\ Samsom Tsegay Beyene}
+    \end{flushleft}
+
+
+
+\end{titlepage}
+
+\newpage
+  \tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{Purpose}
+
+The main purpose of the Software Design Document (or just Design Document) is to provide a more technical and detailed description about the way Travlendar+ is designed and planned, identifying its main components and the interfaces between them. It also guides the software development team and other interested parties through the architecture of the software project, stating what has to be implemented and how to do it.
+
+\subsection{Scope}
+Travlendar+ is a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. This application was not only thought for the regular businessman/businesswoman, who travel in between meetings the whole day and have no time to spare, but also for the parents with a more regular daily schedule, who just want to get the best out of their time while being able to pick their kids from school and take them to other activities, always being on time.
+Of course the system will fully support the features of a regular calendar application (booking of appointments in a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment) and arranging all of the appointments in the best possible way. The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
+
+
+\subsection{Definitions, Acronyms, Abbreviations}
+\subsubsection{Definitions}
+\textit{Visitor}: A person who uses Travlendar+ for the first time, and is not yet registered.\\
+\textit{User}: A person who uses Travlendar+.\\
+\textit{Home Screen}: User interface screen that shows the current appointments.\\
+\textit{System}: defines the overall set of software components that implement the required functionality.\\
+\textit{Local Time}: time of the system.
+\subsubsection{Acronyms}
+\textit{API}: Application Programming Interface\\
+\textit{DD}: Design Document\\
+\textit{ATM: Azienda Trasporti Milanesi}\\
+\textit{SQL}: Structured Query Language\\
+\textit{BPMN}: Business Process Model and Notation
+\subsubsection{Abbreviations}
+
+
+\subsection{Revision History}
+Version 1.0: Initial Release
+
+\subsection{Reference Documents}
+\begin{itemize}
+    \item Assignment document: Mandatory Project Assignments.pdf
+    \item Requirements Analysis and Specification Document produced before
+\end{itemize}
+
+
+\subsection{Document Structure}
+Other than this introductory chapter, this DD is organized in seven more chapters. Chapter two is meant to \textbf{provide different types of view over the system}:
+\begin{itemize}
+    \item A high level overview on how the system is architected.
+    \item A description of the main components of the systems, their structure and how they interact with each other.
+    \item A description of the static deployment view of a system (how the components are deployed in the system's infrastructure). 
+    \item A description of the system's behavior and interactions in run-time conditions.
+    \item A list of the selected architectural styles and patterns used in the design of the system, as well as the reasons that justify the choice of those patterns.
+\end{itemize}
+In the third chapter the most \textbf{relevant algorithms} are analysed and discussed with the appropriate detail and depth, in order to describe the way the system's most critical operations are driven and executed.\\
+The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI.\\
+The fifth chapter explains how the requirements defined in the RASD are fulfilled by the design decisions that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.\\
+In the sixth chapter it is provided an \textbf{implementation, integration and test plan} where it is defined the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how the this integration will be tested throughout the development of the system.\\
+In the seventh chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this DD are specified.
+
+\end{document}
