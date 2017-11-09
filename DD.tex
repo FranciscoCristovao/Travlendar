@@ -82,18 +82,53 @@ Version 1.0: Initial Release
 
 
 \subsection{Document Structure}
-Other than this introductory chapter, this DD is organized in seven more chapters. Chapter two is meant to \textbf{provide different types of view over the system}:
+Other than this introductory chapter, this DD is organized in seven more chapters. Chapter two is meant to \textbf{provide different types of views over the system}:
 \begin{itemize}
     \item A high level overview on how the system is architected.
-    \item A description of the main components of the systems, their structure and how they interact with each other.
-    \item A description of the static deployment view of a system (how the components are deployed in the system's infrastructure). 
+    \item A description of the main components of the system, their structure and how they interact with each other.
+    \item A description of the static deployment view of the system (how the components are deployed in the system's infrastructure). 
     \item A description of the system's behavior and interactions in run-time conditions.
     \item A list of the selected architectural styles and patterns used in the design of the system, as well as the reasons that justify the choice of those patterns.
 \end{itemize}
 In the third chapter the most \textbf{relevant algorithms} are analysed and discussed with the appropriate detail and depth, in order to describe the way the system's most critical operations are driven and executed.\\
 The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI.\\
-The fifth chapter explains how the requirements defined in the RASD are fulfilled by the design decisions that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.\\
-In the sixth chapter it is provided an \textbf{implementation, integration and test plan} where it is defined the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how the this integration will be tested throughout the development of the system.\\
-In the seventh chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this DD are specified.
+The fifth chapter explains how the \textbf{requirements defined in the RASD are fulfilled by the design decisions} that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.\\
+In the sixth chapter it is provided an \textbf{implementation, integration and test plan}, defining the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how the this integration will be tested alongside with the development of the system.\\
+In the seventh chapter the \textbf{effort spent by each of the group member} is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this DD are specified.
+
+
+\section{Architectural Design}
+
+\subsection{Overview: High-level components and their interaction}
+In the following paragraphs it will be presented a general overview of how the system is architected, specially focused on the different logically separated layers.
+As described on the RASD, Travlendar+ is supposed to be fully scalable and portable, so a layered architecture is the one that best fits these requirements. With this in mind, the system will have a three layer architecture, organized in the following way:
+The Business Layer implements all core functionality of the system.
+\subsection{Component View}
+\subsection{Deployment View}
+\subsection{Runtime View}
+\subsection{Component Interfaces}
+\subsection{Selected architectural styles and patterns}
+
+\subsubsection{Client/Server Architecture} This architectural style keeps all the logic of the program, which is computationally heavy, on the server side, while the end-users only need to offer a simple amount of presentation functionality. This allows the system to be centralized, improving:
+    \begin{itemize}
+        \item Performance: system's files are only accessed by the server, so they're all in the same place, becoming easier to manage and faster to access
+        \item Security: facilitates the implementation of security layers and protocols between the client and the server, setting up access rights to reach the server for example
+        \item Scalability: it's easy to change the logic server-side without any implication on the client side
+    \end{itemize}
+\subsubsection{Layered Architecture} This architectural pattern promotes a great level of separation of concerns between the various components of the system, given that every component operates at a single logical layer of abstraction. This design choice also simplifies the implementation and testing phase of the system: since the layers are isolated from each other, it is possible to test a specific layer even if the underlying layers aren't implemented, using mocks or stubs to simulate the functionality of those.
+\subsubsection{3-Tier Physical Architecture}
+
+\section{Algorithm Design}
+
+\section{User Interface Design}
+
+\section{Requirements Traceability}
+
+\section{Implementation, Integration and Test Plan}
+
+\section{Effort Spent}
+
+\section{References}
+https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/ch01.html
 
 \end{document}
