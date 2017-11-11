@@ -52,7 +52,7 @@ The main purpose of the Software Design Document (or just Design Document) is to
 
 \subsection{Scope}
 Travlendar+ is a calendar-based application that provides the user a convenient way of organizing his/her daily schedule, maximizing its productiveness and minimizing the worthless time of his/her day. This application was not only thought for the regular businessman/businesswoman, who travel in between meetings the whole day and have no time to spare, but also for the parents with a more regular daily schedule, who just want to get the best out of their time while being able to pick their kids from school and take them to other activities, always being on time.
-Of course the system will fully support the features of a regular calendar application (booking of appointments in a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment) and arranging all of the appointments in the best possible way. The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
+Of course the system will fully support the features of a regular calendar application (booking of appointments at a specific time and location), but in a "smart" way, being able to detect and warn the user if a new appointment is not feasible because it has a conflict (the start of it doesn't allow the needed travel time after the end of the last appointment) and arranging all of the appointments in the best possible way. The application is meant to be used in the City of Milan, and so it will take advantage of the wide range of travel means and services already existing in the city, from public transports to shared bikes and cars. With the information gathered from those services, it will be able to suggest the best travel mean for the user to move between appointments, based on the available travel time, total cost, current weather and even user preferences.
 
 
 \subsection{Definitions, Acronyms, Abbreviations}
@@ -82,6 +82,7 @@ Version 1.0: Initial Release
 
 
 \subsection{Document Structure}
+
 Other than this introductory chapter, this DD is organized in seven more chapters. Chapter two is meant to \textbf{provide different types of views over the system}:
 \begin{itemize}
     \item A high level overview on how the system is architected.
@@ -90,19 +91,39 @@ Other than this introductory chapter, this DD is organized in seven more chapter
     \item A description of the system's behavior and interactions in run-time conditions.
     \item A list of the selected architectural styles and patterns used in the design of the system, as well as the reasons that justify the choice of those patterns.
 \end{itemize}
-In the third chapter the most \textbf{relevant algorithms} are analysed and discussed with the appropriate detail and depth, in order to describe the way the system's most critical operations are driven and executed.\\
-The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI.\\
-The fifth chapter explains how the \textbf{requirements defined in the RASD are fulfilled by the design decisions} that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.\\
-In the sixth chapter it is provided an \textbf{implementation, integration and test plan}, defining the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how the this integration will be tested alongside with the development of the system.\\
+
+In the third chapter the most \textbf{relevant algorithms} are analysed and discussed with the appropriate detail and depth, in order to describe the way the system's most critical operations are driven and executed.
+
+The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI.
+
+The fifth chapter explains how the \textbf{requirements defined in the RASD are fulfilled by the design decisions} that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.
+
+In the sixth chapter it is provided an \textbf{implementation, integration and test plan}, defining the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how the this integration will be tested alongside with the development of the system.
+
 In the seventh chapter the \textbf{effort spent by each of the group member} is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this DD are specified.
 
 
 \section{Architectural Design}
 
 \subsection{Overview: High-level components and their interaction}
+
 In the following paragraphs it will be presented a general overview of how the system is architected, specially focused on the different logically separated layers.
-As described on the RASD, Travlendar+ is supposed to be fully scalable and portable, so a layered architecture is the one that best fits these requirements. With this in mind, the system will have a three layer architecture, organized in the following way:
-The Business Layer implements all core functionality of the system.
+As described on the RASD, Travlendar+ is supposed to be fully scalable and portable, so a layered architecture is the one that best fits these requirements. Given that the system only provides an Application interface, there's no need for a fourth layer isolating the web server from the application server. 
+
+With this in mind, the system will have a three layer architecture, organized as shown bellow:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.5]{highLevelView.png}
+        \caption{High Level View of the system's architecture}
+        \label{fig:highLevelView}
+    \end{figure}
+The \textbf{Presentation Layer} is the most external layer of the system, and is responsible for handling all GUI communication and logic. This layer does not handle data or process business rules, but it  forwards all the requests to the layers bellow and translates the system operations results of these requests to something that users can understand. It is the only layer of the system that users can access directly and interact with.
+
+The \textbf{Business Layer} implements all core functionality of the system. It's in this layer that the application logic and business rules are implemented, in particular all the operations related to a user account and the appointment creation and management are performed by components of this layer. This layer interacts with the APIs exposed by the Data Layer in order to store and retrieve data. The business layer also depends on some third party systems and the external services they provide (specifically for the implementation of the appointment creation and management and travel mean functionality). These external services are directly invoked by some of the classes of the Business Layer using a public API provided by those.
+
+At last, the \textbf{Data Layer} is the lowest layer of the architecture and includes the data persistence mechanisms responsible for data storage and management (rather than raw DBMS connections). It also provides an API to the Business Layer that exposes methods of managing the stored data without creating dependencies on the data storage mechanisms, promoting the encapsulation of the persistence mechanisms and avoiding data exposition.
+
+Even though the \textbf{Third Party Services} don't belong to any particular layer, these services are illustrated in the figure above in order to highlight that the interaction with these will happen at the level of the Business Layer.
 \subsection{Component View}
 \subsection{Deployment View}
 \subsection{Runtime View}
