@@ -66,8 +66,9 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{API}: Application Programming Interface\\
 \textit{DD}: Design Document\\
 \textit{ATM: Azienda Trasporti Milanesi}\\
+\textit{DD}: Database\\
 \textit{SQL}: Structured Query Language\\
-\textit{BPMN}: Business Process Model and Notation
+\textit{ER}: Entity Relationship Model
 \subsubsection{Abbreviations}
 
 
@@ -111,20 +112,56 @@ In the following paragraphs it will be presented a general overview of how the s
 As described on the RASD, Travlendar+ is supposed to be fully scalable and portable, so a layered architecture is the one that best fits these requirements. Given that the system only provides an Application interface, there's no need for a fourth layer isolating the web server from the application server. 
 
 With this in mind, the system will have a three layer architecture, organized as shown bellow:
-    \begin{figure}[H]
-        \centering
-        \includegraphics[scale=0.5]{highLevelView.png}
-        \caption{High Level View of the system's architecture}
-        \label{fig:highLevelView}
-    \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{highLevelView.png}
+    \caption{High Level View of the system's architecture}
+    \label{fig:highLevelView}
+\end{figure}
 The \textbf{Presentation Layer} is the most external layer of the system, and is responsible for handling all GUI communication and logic. This layer does not handle data or process business rules, but it  forwards all the requests to the layers bellow and translates the system operations results of these requests to something that users can understand. It is the only layer of the system that users can access directly and interact with.
 
-The \textbf{Business Layer} implements all core functionality of the system. It's in this layer that the application logic and business rules are implemented, in particular all the operations related to a user account and the appointment creation and management are performed by components of this layer. This layer interacts with the APIs exposed by the Data Layer in order to store and retrieve data. The business layer also depends on some third party systems and the external services they provide (specifically for the implementation of the appointment creation and management and travel mean functionality). These external services are directly invoked by some of the classes of the Business Layer using a public API provided by those.
+The \textbf{Business Layer} implements all core functionality of the system. It's in this layer that the application logic and business rules are implemented, in particular all the operations related to a user account and the appointment creation and management are performed by components of this layer. Given the importance of this layer (business logic and application server), it should be located in a "demilitarized zone". This layer interacts with the APIs exposed by the Data Layer in order to store and retrieve data. The business layer also depends on some third party systems and the external services they provide (specifically for the implementation of the appointment creation and management and travel mean functionality). These external services are directly invoked by some of the classes of the Business Layer using a public API provided by those.
 
-At last, the \textbf{Data Layer} is the lowest layer of the architecture and includes the data persistence mechanisms responsible for data storage and management (rather than raw DBMS connections). It also provides an API to the Business Layer that exposes methods of managing the stored data without creating dependencies on the data storage mechanisms, promoting the encapsulation of the persistence mechanisms and avoiding data exposition.
+At last, the \textbf{Data Layer} is the lowest layer of the architecture and includes the data persistence mechanisms responsible for data storage and management (rather than raw DBMS connections). It also provides an API to the Business Layer that exposes methods of managing the stored data without creating dependencies on the data storage mechanisms, promoting the encapsulation of the persistence mechanisms and avoiding data exposition. 
 
 Even though the \textbf{Third Party Services} don't belong to any particular layer, these services are illustrated in the figure above in order to highlight that the interaction with these will happen at the level of the Business Layer.
 \subsection{Component View}
+The main function of this section is to present a more detailed description of the components that must be developed as part of Travlendar+.
+
+In the following diagram we can see the component view of the system (the more complex components will be analysed in further detail).
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{componentView.png}
+    \caption{Component Diagram of the system}
+    \label{fig:componentView}
+\end{figure}
+The \textbf{User Application} is the component responsible for providing the user interfaces that allow him to interact with the system and all of its functionality. Since a thin-client is being used to implement a client/server architecture, the bulk of the data processing occurs on the server. Given this, the User Application component will act as a simple "terminal" to send requests to the server, being therefore quite simple and not needed to go into further detail.
+
+The \textbf{Server} is the main component of the system, responsible for the data processing in order to provide all of the systems functionality. Given its complexity, it will be analysed in further detail later in this section.
+
+The \textbf{Database Management System (DBMS)} is the component responsible for storing and retrieving data in a persistent and reliable way. Instead of implementing this component from scratch, a commercial solution shall be used (MySQL for example).
+
+\subsubsection{Server}
+Being the most complex component of the system, it is usefull to analyze in detail the Server's constitution.
+
+As mentioned previously, this component is primarily responsible for all operations related to system functionality. More specifically, this component is divided into seven sub-components, each related to a different kind of functionality and operation:
+\begin{itemize}
+    \item The \textbf{Router} sub-component receives the requests from the User Application and forwards (routes) them to the corresponding controller.
+    \item The \textbf{Travel Mean Controller} sub-component performs all the necessary operations to compute the best travel means to get to an appointment, given the schedule at that time. This module is the one with more external interfaces since it needs to gather data from the transport services and weather services in the city of Milan in order to perform its functions.
+    \item The \textbf{Location Controller} sub-component implements all methods for updating the location of the user, travel means or appointment, interacting directly with the Maps and Geolocation API.
+    \item The \textbf{Appointment Controller} sub-component performs all the necessary operations that allow the user to create, edit and delete an appointment. It is also responsible for all the needed procedures that allow the user to always have the best possible schedule: schedule and arrange the appointments according to the parameters the user defines for each appointment and based on the time the user needs to get from one appointment to another (data computed by the Travel Mean Controller, which explains the dependency from this component). This, allied with the Travel Mean Controller, fulfill all the requirements related to the appointment creation and managing.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.426]{serverComponentView.png}
+    \caption{View of Server Component in detail}
+    \label{fig:componentView}
+\end{figure}
+
+\subsubsection{DBMS}
+The following ER provides a graphical representation of the conceptual model of the database.
+
 \subsection{Deployment View}
 \subsection{Runtime View}
 \subsection{Component Interfaces}
