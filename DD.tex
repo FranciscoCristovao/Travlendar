@@ -68,7 +68,9 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{ATM: Azienda Trasporti Milanesi}\\
 \textit{DD}: Database\\
 \textit{SQL}: Structured Query Language\\
-\textit{ER}: Entity Relationship Model
+\textit{ER}: Entity Relationship Model\\
+\textit{MVC}: Model-View-Controller
+\textit{SOA}: Service Oriented Architecture
 \subsubsection{Abbreviations}
 
 
@@ -114,7 +116,7 @@ As described on the RASD, Travlendar+ is supposed to be fully scalable and porta
 With this in mind, the system will have a three layer architecture, organized as shown bellow:
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{highLevelView.png}
+    \includegraphics[scale=0.45]{highLevelView.png}
     \caption{High Level View of the system's architecture}
     \label{fig:highLevelView}
 \end{figure}
@@ -131,7 +133,7 @@ The main function of this section is to present a more detailed description of t
 In the following diagram we can see the component view of the system (the more complex components will be analysed in further detail).
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{componentView.png}
+    \includegraphics[scale=0.45]{componentView.png}
     \caption{Component Diagram of the system}
     \label{fig:componentView}
 \end{figure}
@@ -144,38 +146,49 @@ The \textbf{Database Management System (DBMS)} is the component responsible for 
 \subsubsection{Server}
 Being the most complex component of the system, it is usefull to analyze in detail the Server's constitution.
 
-As mentioned previously, this component is primarily responsible for all operations related to system functionality. More specifically, this component is divided into seven sub-components, each related to a different kind of functionality and operation:
-\begin{itemize}
-    \item The \textbf{Router} sub-component receives the requests from the User Application and forwards (routes) them to the corresponding controller.
-    \item The \textbf{Travel Mean Controller} sub-component performs all the necessary operations to compute the best travel means to get to an appointment, given the schedule at that time. This module is the one with more external interfaces since it needs to gather data from the transport services and weather services in the city of Milan in order to perform its functions.
-    \item The \textbf{Location Controller} sub-component implements all methods for updating the location of the user, travel means or appointment, interacting directly with the Maps and Geolocation API.
-    \item The \textbf{Appointment Controller} sub-component performs all the necessary operations that allow the user to create, edit and delete an appointment. It is also responsible for all the needed procedures that allow the user to always have the best possible schedule: schedule and arrange the appointments according to the parameters the user defines for each appointment and based on the time the user needs to get from one appointment to another (data computed by the Travel Mean Controller, which explains the dependency from this component). This, allied with the Travel Mean Controller, fulfill all the requirements related to the appointment creation and managing.
-\end{itemize}
-
+As mentioned previously, this component is primarily responsible for all operations related to system functionality. More specifically, this component is divided into seven sub-components, each related to a different kind of functionality and operations:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.426]{serverComponentView.png}
     \caption{View of Server Component in detail}
     \label{fig:componentView}
 \end{figure}
+\begin{itemize}
+    \item The \textbf{Router} sub-component receives the requests from the User Application and forwards (routes) them to the corresponding controller.
+    \item The \textbf{Travel Mean Controller} sub-component performs all the necessary operations to compute the best travel means to get to an appointment, given the schedule at that time. This module is the one with more external interfaces since it needs to gather data from the transport services and weather services in the city of Milan in order to perform its functions.
+    \item The \textbf{Location Controller} sub-component implements all methods for updating the location of the user, travel means or appointment, interacting directly with the Maps and Geolocation API.
+    \item The \textbf{Appointment Controller} sub-component performs all the necessary operations that allow the user to create, edit and delete an appointment. It is also responsible for all the needed procedures that allow the user to always have the best possible schedule: schedule and arrange the appointments according to the parameters the user defines for each appointment and based on the time the user needs to get from one appointment to another (data computed by the Travel Mean Controller, which explains the dependency from this component). This, allied with the Travel Mean Controller, fulfill all the requirements related to the appointment creation and managing.
+    \item The \textbf{Account Controller} sub-component implements all the methods for inserting or updating information about the users. More specifically, it allows the creation of new users (registration of visitors) and login of already existing users. It also performs all the necessary operations to allow the user to edit all of his preferences related to the travel means.
+    \item The \textbf{Model} sub-component (and all of its sub-components) manages the behavior and data of the application domain and responds to requests or instructions by the respective controller.
+    \item The \textbf{Data Mappers} sub-component is a layer of software which separates the model from the database, and acts as a "middle-man" for the interactions between these two.
+\end{itemize}
+
 
 \subsubsection{DBMS}
 The following ER provides a graphical representation of the conceptual model of the database.
 
 \subsection{Deployment View}
 \subsection{Runtime View}
+The following diagrams are intended to describe the interactions between the main system components when performing a sample amount of functionality. These diagrams are still a high level view of the system, since the function  names or even the functions themselves may change during the development process.
 \subsection{Component Interfaces}
 \subsection{Selected architectural styles and patterns}
 
 \subsubsection{Client/Server Architecture} This architectural style keeps all the logic of the program, which is computationally heavy, on the server side, while the end-users only need to offer a simple amount of presentation functionality. This allows the system to be centralized, improving:
-    \begin{itemize}
-        \item Performance: system's files are only accessed by the server, so they're all in the same place, becoming easier to manage and faster to access
-        \item Security: facilitates the implementation of security layers and protocols between the client and the server, setting up access rights to reach the server for example
-        \item Scalability: it's easy to change the logic server-side without any implication on the client side
-    \end{itemize}
-\subsubsection{Layered Architecture} This architectural pattern promotes a great level of separation of concerns between the various components of the system, given that every component operates at a single logical layer of abstraction. This design choice also simplifies the implementation and testing phase of the system: since the layers are isolated from each other, it is possible to test a specific layer even if the underlying layers aren't implemented, using mocks or stubs to simulate the functionality of those.
-\subsubsection{3-Tier Physical Architecture}
+\begin{itemize}
+    \item Performance: system's files are only accessed by the server, so they're all in the same place, becoming easier to manage and faster to access
+    \item Security: facilitates the implementation of security layers and protocols between the client and the server, setting up access rights to reach the server for example
+    \item Scalability: it's easy to change the logic server-side without any implication on the client side
+\end{itemize}
 
+\subsubsection{Service Oriented Architecture} This architectural pattern allows the system to be designed as a collection of services that communicate with each other. This way, the external APIs that the system interacts with can be interpreted as a set of these services, which makes them easily implementable (in this case our system is the service consumer, and the APIs are the service providers). It is also possible to see our system as the service provider, first providing a initial set of services and eventually, with the addition of some additional components, increasing the number of services provided.
+
+\subsubsection{Layered Architecture} This architectural pattern promotes a great level of separation of concerns between the various components of the system, given that every component operates at a single logical layer of abstraction. This design choice also simplifies the implementation and testing phase of the system: since the layers are isolated from each other, it is possible to test a specific layer even if the underlying layers aren't implemented, using mocks or stubs to simulate the functionality of those.
+
+\subsubsection{3-Tier Physical Architecture} This architectural style allows the various components of the system on different devices, given the decoupling that exists between the modules. It also allows for any of the three tiers to be upgraded or replaced independently in response to changes in requirements or technology, improving the systems scalability. The system will be composed of 3 tiers: Presentation tier, Business tier (business logic of the system) and Data tier.
+
+\subsubsection{Model-View-Controller} This architectural pattern divides a given application into 3 interconnected parts, separating the internal representation of information from the way this information is presented to the user. This is one of the most used patterns to promote decoupling between the major components of a system, allowing for efficient code reuse and parallel development.
+
+\subsubsection{Data Mapper} This architectural pattern consists on a layer of software that separates the domain layer objects from the database. Its responsibility is to transfer data between the two while keeping them isolated from each other and from the mapper itself.
 \section{Algorithm Design}
 
 \section{User Interface Design}
@@ -188,5 +201,9 @@ The following ER provides a graphical representation of the conceptual model of 
 
 \section{References}
 https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/ch01.html
+
+https://martinfowler.com/eaaCatalog/index.html
+
+Patterns of Enterprise Application Architecture, Martin Fowler
 
 \end{document}
