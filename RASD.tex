@@ -81,17 +81,28 @@ Of course the system will fully support the features of a regular calendar appli
 
 
 \subsection{Revision History}
-Version 1.0: Initial Release
-
-\subsection{Reference Documents}
+\textbf{Version 1.1:} 
 \begin{itemize}
-    \item Assignment document: Mandatory Project Assignments.pdf
-    \item IEEE Recommended Practice for Software Requirements Specifica- tions (Std 830-1998)
+    \item Fixed a number of typos all over the document.
+    \item Modified Goal 1 to better express what the system is intended to do: 
+        \begin{itemize}
+            \item Allow only registered users to access the most relevant functionality of the system.
+        \end{itemize}
+    \item Modified Goal 1 to better include the following requirement:
+        \begin{itemize}
+            \item The system shall not allow a visitor to access more than the registration functionality.
+        \end{itemize}
 \end{itemize}
+\textbf{Version 1.0:} Initial Release
+\subsection{Reference Documents}
+    \begin{itemize}
+        \item Assignment document: Mandatory Project Assignments.pdf
+        \item IEEE Recommended Practice for Software Requirements Specifica- tions (Std 830-1998)
+    \end{itemize}
 
 
 \subsection{Document Structure}
-Other than this introductory chapter, this RASD is organized in six more chapters. Chapter two is meant to provide an overview of the systems functionality, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves, but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analysed in the following chapter. In the third chapter (as mentioned) the system requirements, attributes and constraints are analysed and discussed with the appropriate detail and depth, specifying exactly how they should be.
+Other than this introductory chapter, this RASD is organized in six more chapters. Chapter two is meant to provide an overview of the system's functionality, the type of users it is meant for and the different kinds of interactions it contemplates, not only with the users themselves but also with other systems. Some of the systems requirements are also slightly discussed in this chapter, even though they’ll be analyzed in the following chapter. In the third chapter (as mentioned) the system requirements, attributes and constraints are analyzed and discussed in the appropriate detail and depth, specifying exactly how they should be.
 The fourth chapter deals with the formal analysis of the system using an Alloy model. It includes the Alloy model of the system with a brief discussion on its purpose and on the relevance of using Alloy as a tool to validate our solution, given the problem we had to solve.
 In the fifth chapter the effort spent by each of the group members is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter the tools we used to develop this RASD are specified.
 
@@ -132,7 +143,7 @@ All of these types of users are of working age (20 to 70 years old, being this a
 [D5] The users authorize the system to provide user data (when needed) to the third-party applications it interacts with.\\{}
 [D6] The external services used by the system are assumed to be always available and reachable.\\{}
 [D7] Changes on the user preferences only apply to the appointments created after the change. The ones already created stay the same.\\{}
-[D8] Two different users are not allowed to interact with each other.\\{}
+[D8] Two different users are not allowed to interact with each other. For example, even though two users are meeting each other, the system won't recognize the relation between meetings and will considered them as two different meetings.\\{}
 [D9] The best travel means to get to an appointment won't change if the appointments don't change.\\{}
 [D10] Users don't need to confirm if they started or finished the appointment.\\{}
 [D11] An Appointment maps to only one User.\\{}
@@ -187,13 +198,13 @@ These Mockups represent a basic idea of how the systems user interface will look
 
 
 \subsubsection{Hardware Interfaces}
-In the first release no Hardware Interfaces will be necessary, since the system doesn't need to interact physically with other systems.
+In the first release, no Hardware Interfaces will be necessary since the system doesn't need to interact physically with other systems.
 
 \subsubsection{Software Interfaces}
 Given the wide range of features the system offers, it will need to have several software interfaces. There has to be a way of storing all the user-related data (mainly login, preferences and appointments data). In that sense, the system will use a \textbf{MySQL API} to connect with a MySQL database server, where all the app data will be stored.\\
 The system will also need different kinds of information about the users location and its surrounding, in order to compute the travel time between appointments. To support this functionality, the system will use \textbf{Google Maps Geolocation API} and \textbf{Google Maps API}. The first one will provide information about the user exact location and the second one will provide the real-time information about maps and traffic, and allow it to calculate the best route between two different appointments.\\
 To have access to the current weather, the system will use \textbf{AccuWeather API}, which will provide information about the current weather on both where the user is and where the appointment is located.
-At last, the system will also need to get all sorts of information from many different travel means. In order to get these information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Mobike API} (for the bike sharing system).
+At last, the system will also need to get all sorts of information from many different travel means. In order to get this information, it will have a software interface with \textbf{ATM Milano} (public transport schedule and routes), \textbf{Drive Now API} (for the car sharing system) and \textbf{Mobike API} (for the bike sharing system).
 
 
 
@@ -203,11 +214,12 @@ The communication between the system and those service providers is crucial beca
 
 \subsection{Functional Requirements}
 
-{[G1]} Allow a visitor to become a user after providing the required information and credentials.
+{[G1]} Allow only registered users to access the most relevant functionality of the system.
 \begin{itemize}
     \item{[R1]} The system shall allow the visitor to begin the registration process when he accesses the system. 
     \item{[R2]} The system shall ask the visitor for the required information and credentials during the registration process.
-    \item{[R4]} The system shall register the visitor as a user when the registration process ends, if all the data inserted by the user is valid.
+    \item{[R3]} The system shall register the visitor as a user when the registration process ends, if all the data inserted by the user is valid.
+    \item{[R4]} The system shall not allow a visitor to access more than the registration functionality.
 \end{itemize}
 {[G2]} Allow a logged user to create an appointment.
 \begin{itemize}
@@ -295,7 +307,7 @@ The communication between the system and those service providers is crucial beca
                             \item The system notifies the Visitor that his registration as a user has been completed with success, and redirects him to the Home Screen
                             \end{enumerate} \\
         \hline
-        \textbf{Postconditions} & The visitor ends the registration process successfully and from now on is a user of the system. \\
+        \textbf{Postconditions} & The visitor ends the registration process successfully and from now on is a user of the system, being able to access all of its functionality. \\
         \hline
         \textbf{Exceptions} & \begin{enumerate}[topsep=0pt]
                             \setlength{\itemsep}{0.5pt}
@@ -463,18 +475,18 @@ The communication between the system and those service providers is crucial beca
 
 
 \subsection{Performance Requirements}
-The system has to be able to respond to a possibly large number of requests (depending on the amount of users the system will have). Taking into account other (less powerful but widely used) calendar and transport applications, an infrastructure that supports a maximum workload on the order of hundreds of thousands of requests shall be enough to satisfy all the possible simultaneous requests after the release. The infrastructure must have a good scalability in order to increase the maximum workload in case the user base increases too. The response times of the system shall be\footnote{According to Jakon Nielsen book on Usability}:
+The system has to be able to respond to a possibly large number of requests (depending on the number of users the system will have). Taking into account other (less powerful but widely used) calendar and transport applications, an infrastructure that supports a maximum workload on the order of hundreds of thousands of requests shall be enough to satisfy all the possible simultaneous requests after the release. The infrastructure must have a good scalability in order to increase the maximum workload in case the user base increases too. The response times of the system shall be\footnote{According to Jakob Nielsen book on Usability}:
 \begin{itemize}
-    \item 0.1 second for the tasks that require almost no computing power (changing menus in the systems case), in order for the user to feel that the system is reacting instantaneously
-    \item 1 second for the tasks that require a normal amount of computing power, in order for the user's flow of thought to stay uninterrupted (deleting an appointment in the systems case)
-    \item 10 second for the tasks that require significant computing power, in order to keep the user's attention (computing the best travel route and consequent travel mean to get to an appointment in the systems case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
+    \item 0.1 second for the tasks that require almost no computing power (changing menus in the system's case), in order for the user to feel that the system is reacting instantaneously
+    \item 1 second for the tasks that require a normal amount of computing power, in order for the user's flow of thought to stay uninterrupted (deleting an appointment in the system's case)
+    \item 10 seconds for the tasks that require significant computing power, in order to keep the user's attention (computing the best travel route and consequent travel mean to get to an appointment in the system's case). The users must also receive some sort of feedback during the wait, so they can know what to expect.
 \end{itemize}
 N.B. A user is assumed to have a stable internet connection in order to achieve these response times.
 
 
 \subsection{Design Constraints}
 \subsubsection{Standard Compliance}
-The system must require the users permission to provide their location, preferences and schedule to the external services it uses (transport services and weather services), in order to manage sensible data always respecting the privacy law. For this, the system has to be compliant with the regulation on Software in Data Security and Privacy, international treaty obligations and Italian laws, as well as with any other regulation the third party systems it interacts with comply.
+The system must require the user's permission to provide their location, preferences, and schedule to the external services it uses (transport services and weather services), in order to manage sensitive data always respecting the privacy law. For this, the system has to be compliant with the regulation on Software in Data Security and Privacy, international treaty obligations and Italian laws, as well as with any other regulation the third party systems it interacts with comply.
 
 \subsubsection{Hardware Limitations}
 The user will need a mobile phone with GPS and Wi-fi/Mobile Data always on when using the app, other than the obvious space for the application package.
@@ -488,18 +500,18 @@ In order to keep maintenance costs low, the system should offer a high level of 
 The system is required to have an availability of 99.99\%. This means that it’s acceptable for the system to have a downtime of up to 1 hour every year caused by a system malfunction.
 
 \subsubsection{Security}
-Users credentials and payment information are critical data that will be stored in the systems database. Since the system communicates with external systems, the security and inaccessibility (when not needed) of this data is a big concern that has to be assured. All of the data related to the appointments has to be secured too since it can be sensible information. 
+Users credentials and payment information are critical data that will be stored in the system's database. Since the system communicates with external systems, the security and inaccessibility (when not needed) of this data is a big concern that has to be assured. All of the data related to the appointments have to be secured too since it can be sensible information. 
 
 \subsubsection{Maintainability}
 To measure the systems maintainability a metric shall be used. This metric needs to be tracked during the development and kept as low as possible, in order to avoid high maintainability costs subsequently. It's obvious that the system must have a high maintainability, which means that the probability of performing a successful repair action within a given (necessary) time must be high (higher than 95\%).
 
 \subsubsection{Portability}
-The first release of the system will be available for the mobile platform our target users use the most, IOS. Nonetheless, an Android version shall be released soon, and even a new platform may arise. So, it's crucial that the system is built in a way which makes it easy to deploy in different platforms. The portability measure consists on the cost that deploying the system in a new platform implies, and in this case, this cost should be smaller than the cost of deploying other similar apps.
+The first release of the system will be available for the mobile platform our target users use the most, IOS. Nonetheless, an Android version shall be released soon, and even a new platform may arise. So, it's crucial that the system is built in a way which makes it easy to deploy on different platforms. The portability measure consists of the cost that deploying the system in a new platform implies, and in this case, this cost should be smaller than the cost of deploying other similar apps.
 
 \section{Formal Analysis Using Alloy}
-In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them, and is to be seen as an attempt of capturing the systems essential features.
+In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them and is to be seen as an attempt at capturing the systems essential features.
 This model has the purpose of verifying if the properties defined for the system are being satisfied and if there are no constraints being violated.
-In this model it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same and that only the status of two fixed appointments have to be different (the fact that a flexible appointment didn't start but the Local Time is already in the possible interval that it can start was considered an implementation detail, too difficult if even possible to represent in Alloy, and so two Flexible Appointments can be in the "started" state). Although this model is a simplified version of the "real world", it is enough to show that the model stands in the scope of the project (including all of the details would only increase complexity). 
+In this model, it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same and that only the status of two fixed appointments have to be different (the fact that a flexible appointment didn't start but the Local Time is already in the possible interval that it can start was considered an implementation detail, too difficult if even possible to represent in Alloy, and so two Flexible Appointments can be in the "started" state). Although this model is a simplified version of the "real world", it is enough to show that the model stands in the scope of the project (including all of the details would only increase complexity). 
 
 
 \begin{verbatim}
