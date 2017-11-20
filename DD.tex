@@ -69,8 +69,9 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{DD}: Database\\
 \textit{SQL}: Structured Query Language\\
 \textit{ER}: Entity Relationship Model\\
-\textit{MVC}: Model-View-Controller
-\textit{SOA}: Service Oriented Architecture
+\textit{MVC}: Model-View-Controller\\
+\textit{SOA}: Service Oriented Architecture\\
+\textit{JSON}: JavaScript Object Notation
 \subsubsection{Abbreviations}
 
 
@@ -199,6 +200,7 @@ In this section the interfaces through which the different system's components i
         \item createFlexibleAppointment(string: name, string: description, date: from, date: to, time: minDuration float: longitude, float: latitude): receives the necessary data to create a Flexible Appointment and creates it
         \item editAppointment(int: appointmentId, data): receives the data parameters related to an appointment that are supposed to be changed and the id of that appointment. The data parameters are the ones described above.
         \item deleteAppointment(int: appointmentId): deletes the appointment that matches the appointment Id.
+        \item checkReachibility(appointmentDetails): checks if the appointment to be created/edited is reachable or not.
     \end{itemize}
     \item The \textbf{AccountIntf} interface represents the way components can interact with the Account Controller, responsible for managing all of the aspects associated with the user account. This interface provides the following methods:
     \begin{itemize}
@@ -257,37 +259,50 @@ The following UX Diagram provides additional information about the way the user 
 \end{figure}
 
 \section{Requirements Traceability}
+\subsection{Functional Requirements}
 All of the design choices presented in this document were made with the goals and requirements defined in the RASD in mind, and aim to fulfill them in the best possible way. The following list provides an accurate mapping between the system's goals and requirements defined on the RASD and the system components, defined in the DD, that aim to fulfill those goals and requirements.\\
 \textbf{N.B.: All the requirement intervals include the first and the last on the interval.}
+
 \begin{itemize}
-    \item {[G1]} Allow only registered users to access the most relevant functionality of the system (R1-R4).
+    \item \textbf{{[G1]}} Allow only registered users to access the most relevant functionality of the system (R1-R4).
     \begin{itemize}
-        \item Account Controller
+        \item The \textbf{Account Controller}, which provides the visitors the ability to register as users of the system.
     \end{itemize}
-    \item {[G2]} Allow a logged user to create an appointment (R5-R10).
+    \item \textbf{{[G2]}} Allow a logged user to create an appointment (R5-R10).
     \begin{itemize}
-        \item Appointment Controller
-        \item Travel Mean Controller
+        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically the ability to create a new appointment.
+        \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
-    \item {[G3]} Allow a logged user to edit an appointment (R6-R7 and R11-R13).
+    \item \textbf{{[G3]}} Allow a logged user to edit an appointment (R6-R7 and R11-R13).
     \begin{itemize}
-        \item Appointment Controller
-        \item Travel Mean Controller
+        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically the ability to edit a previously created appointment.
+        \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
-    \item {[G4]} Allow a logged user to delete an appointment (R14).
+    \item \textbf{{[G4]}} Allow a logged user to delete an appointment (R14).
     \begin{itemize}
-        \item Appointment Controller
+        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to an appointments management, specifically to delete an appointment from the user's schedule.
     \end{itemize}
-    \item {[G5]} Allow a logged user to have his schedule planned in the best possible way (R15-R19).
+    \item \textbf{{[G5]}} Allow a logged user to have his schedule planned in the best possible way (R15-R19).
     \begin{itemize}
-        \item Appointment Controller
-        \item Travel Mean Controller
+        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically to recompute the best travel means to get to all appointments when any change in the calendar occurs.
+        \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
-    \item {[G6]} Allow a logged user to define preferences related to travel means (R20-R24).
+    \item \textbf{{[G6]}} Allow a logged user to define preferences related to travel means (R20-R24).
     \begin{itemize}
-        \item Account Controller
+        \item The \textbf{Account Controller}, which provides the visitors the ability to manage its account preferences and change them according to his personal preferences.
     \end{itemize}
 \end{itemize}
+For all of the requirements the \textbf{Router Component} takes part in the interaction, but only maps the User Application requests to the respective controller, not being relevant to refer to in every goal. So does the \textbf{Model Component}, the \textbf{Data Mappers Component} and the \textbf{Database Component}, since our application has to access the database (either to read or to write) every time it executes an operation.
+
+\subsection{Non-Functional Requirements}
+
+The non-functional requirements were no exception and were also taken into consideration when making the Design Choices for the system. In particular, this analysis will be focused on the \textbf{Performance, Reliability, Availability, Security}, and \textbf{Portability} requirements.
+
+The usage of a 3 tier infrastructure is the key to achieve most of these requirements. This infrastructure allows us not only to achieve high levels of \textbf{Performance} (components with different hardware needs can be deployed in more powerful machines) but also satisfying levels of \textbf{Reliability} \textbf{Availability} as, thanks to the low coupling between the different components, it allows them to be distributed over the network, possibly replicated and in different server farms (highly increasing fault tolerance).
+
+\textbf{Security} is achieved thanks to software and hardware measures. At software level, all interface methods check if the call parameters are valid before executing its main logic, and if the caller is authorized. The database APIs will also be protected against SQL Injection and all messages between different components of the system and external APIs will be encrypted and have unique identifiers, preventing this way man-in-the-middle attacks (more specifically replay attacks) and encripting all of the critical data.
+
+At last, \textbf{Portability} is achieved by offering a standard web service mechanism based on JSON through the API's. This allows the system to be invoked from any platform with internet access, not restricting the system to a specific operating system, programming language or hardware brand.
 
 \section{Implementation, Integration and Test Plan}
 
@@ -320,7 +335,9 @@ All of the design choices presented in this document were made with the goals an
   \hline
   19/11/2017 & Component Interfaces and Requirements Traceability & 4 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{29} \\ 
+  20/11/2017 & Runtime View and Requirements Traceability & 3 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{32} \\ 
   \hline
 \end{tabular}
 \end{center}
