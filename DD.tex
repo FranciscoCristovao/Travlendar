@@ -9,6 +9,8 @@
 \usepackage{enumitem}
 \usepackage[top=1.5in]{geometry}
 \usepackage{subcaption}
+\usepackage[options ]{algorithm2e}
+\usepackage{amsmath}
 \graphicspath{ {images/} }
 
 
@@ -168,6 +170,13 @@ As mentioned previously, this component is primarily responsible for all operati
 \subsubsection{Database detailed analysis}
 The following ER provides a graphical representation of the conceptual model of the database.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.30]{databaseER.png}
+    \caption{Database ER}
+    \label{fig:databaseER}
+\end{figure}
+
 \subsection{Deployment View}
 The main purpose of this section is to show how the software components described above are going to be deployed in the system's hardware infrastructures. This characteristic makes the developers task easier, since the mapping between software and hardware becomes explicit.
 
@@ -188,6 +197,15 @@ The following diagrams are intended to describe the interactions between the mai
     \includegraphics[scale=0.48, angle=-90, origin=c]{loginRuntimeView.png}
     \caption{User Login}
     \label{fig:loginRuntime}
+\end{figure}
+
+\subsubsection{Change Preference}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.48, angle=-90, origin=c]{preferenceRuntimeView.png}
+    \caption{Change Preference}
+    \label{fig:preferenceRuntime}
 \end{figure}
 
 \subsection{Component Interfaces}
@@ -239,7 +257,88 @@ In this section the interfaces through which the different system's components i
 \subsubsection{Remote Facade} This architectural pattern provides a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use. Given that the communication between the different components of our system will happen over the network, the existence of a Facade with coarse-grain methods that map to various fine-grained ones also improves the communication's efficiency (fewer packets have to be sent over the network). With all this, it promotes decoupling between the server and the user application, since all the remote calls are made through one interface and then mapped inside the server (by the router component) to the respective controller.
 
 \subsubsection{Data Mapper} This architectural pattern is a data source architectural pattern. It consists of a layer of software that separates the domain layer objects from the database. Its responsible for transferring data between the two while keeping them isolated from each other and from the mapper itself.
+
+\subsubsection{Other design decisions}
+A REST communication protocol with JSON data model format is also being used to allow the communication between the User Application and the Server, being this based on HTTP requests (POST, GET, PUT and DELETE to name the most important ones).
+
 \section{Algorithm Design}
+In this section it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained using pseudo-code notation.
+
+The fourth and final algorithm computes the Best Travel Mean for the user to get to a specific appointment.
+
+\subsection{Appointment Placement Algorithm}
+The first algorithm checks if it is possible to insert a new appointment in the user's schedule and, if possible, insert it.
+
+\subsubsection{Fixed Appointment Placement Algorithm}
+
+If this new appointment is a fixed one, there are three possible situations:
+\begin{itemize}
+    \item The time interval of the appointment is free - the new appointment is successfully inserted in the system
+    \item The time interval of the appointment isn't free, but the system manages to reschedule an adjacent flexible appointment, leaving enough space for this appointment to be scheduled - the new appointment is successfully inserted in the user's schedule.
+    \item There is no way of inserting that appointment into the user's schedule - the system returns an error message.
+\end{itemize}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\Begin{
+    $A\leftarrow Set of Appointments Surrounding N Time interval$\;
+    $F\leftarrow Set of Flexible Appointments$\;
+    $N\leftarrow New Appointment$\;
+    \For{$i\leftarrow 1$ \KwTo $|A|$}{
+        \uIf{$N_{timeInterval}=free$}{
+            $insert(N)$\;
+            $return$\;}
+        {\uElseIf{$Flexible Appointments In N_{end}-N_{start}$}{
+            \For{$j\leftarrow 1$ \KwTo $|F|$}{
+            $rescheduleFlexibleAppointment(F[j])$
+            }
+            \If{$N_{timeInterval}=free$}{
+            $insert(N)$\;
+            $return$\;}
+        }}
+        
+    }
+}
+\caption{Appointment Placement}
+\end{algorithm}
+
+\subsubsection{Flexible Appointment Placement Algorithm}
+
+If this new appointment is a flexible one, there are three possible situations:
+\begin{itemize}
+    \item There is a free space in the user's schedule that fits the given appointment time interval and is at least as big as the flexible appointment's minimum duration - the new appointment is successfully inserted in the system.
+    \item There is no free space in the user's schedule that fits the given appointment time interval and is at least as big as the flexible appointment's minimum duration, but the system manages to reschedule an adjacent flexible appointment, leaving enough space for this appointment to be scheduled - the new appointment is successfully inserted in the user's schedule.
+    \item There is no way of inserting that appointment into the user's schedule - the system returns an error message.
+\end{itemize}
+
+
+\subsection{Reachability Checker Algorithm}
+This second algorithm checks if an appointment is reachable or not. Given a schedule state and a new appointment to be inserted, it computes the time interval between the previous appointment end time and the starting time of the appointment to be inserted and, if this interval is smaller than the required time to get from the previous location to the new appointment's location, the system returns that the appointment is reachable. Otherwise, it is unreachable.
+
+Bellow the pseudo code for this algorithm is presented, in order to better understand it:
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\Begin{
+    $L2\leftarrow New Appointment Location$\;
+    \eIf{$Previous Appointment$}{
+        $L1\leftarrow Previous Appointment Location$\;
+        $T1\leftarrow Previous Appointment_{endTime}$\;
+    }
+    {
+        $L1\leftarrow User Location$\;
+        $T1\leftarrow 0$
+    }
+    $T2\leftarrow Previous Appointment_{startTime}$\;
+    $\Delta T\leftarrow T2-T1$\;
+    
+    $T3\leftarrow Time To Get From Old Appointment To New$\;
+    \eIf{$\Delta T \geq T3$}{
+        $appointmentReachable$\;}
+    {$appointmentUnreachable$}
+    \caption{Reachability Checker}
+}
+\end{algorithm}
 
 \section{User Interface Design}
 \subsection{Mockups}
@@ -337,7 +436,9 @@ At last, \textbf{Portability} is achieved by offering a standard web service mec
   \hline
   20/11/2017 & Runtime View and Requirements Traceability & 3 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{32} \\ 
+  21/11/2017 & Runtime View and Algorithm Design & 4 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{36} \\ 
   \hline
 \end{tabular}
 \end{center}
