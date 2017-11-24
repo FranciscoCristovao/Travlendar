@@ -267,7 +267,7 @@ In this section it is presented an overall description of the most relevant algo
 The fourth and final algorithm computes the Best Travel Mean for the user to get to a specific appointment.
 
 \subsection{Appointment Placement Algorithm}
-The first algorithm checks if it is possible to insert a new appointment in the user's schedule and, if possible, insert it.
+The first and second algorithms check if it is possible to insert a new Fixed Appointment and a new Flexible Appointment, respectively, in the user's schedule and, if possible, inserts it.
 
 \subsubsection{Fixed Appointment Placement Algorithm}
 
@@ -281,36 +281,66 @@ If this new appointment is a fixed one, there are three possible situations:
 \begin{algorithm}[H]
 \SetAlgoLined
 \Begin{
-    $A\leftarrow Set of Appointments Surrounding N Time interval$\;
-    $F\leftarrow Set of Flexible Appointments$\;
-    $N\leftarrow New Appointment$\;
-    \For{$i\leftarrow 1$ \KwTo $|A|$}{
+    $N\leftarrow New Fixed Appointment$\;
         \uIf{$N_{timeInterval}=free$}{
             $insert(N)$\;
-            $return$\;}
-        {\uElseIf{$Flexible Appointments In N_{end}-N_{start}$}{
-            \For{$j\leftarrow 1$ \KwTo $|F|$}{
-            $rescheduleFlexibleAppointment(F[j])$
-            }
-            \If{$N_{timeInterval}=free$}{
+            $return\ True$\;}
+        {\uIf{$Flexible Appointments In (N_{end}-N_{start})=1$}{
+        
+            \uIf{$Flexible Appointment\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, Previous Appointment_{end}, N_{start})$}{
+            $relocate(Flexible Appointment)$\;
             $insert(N)$\;
-            $return$\;}
-        }}
+            $return\ True$\;}
+            
+            \uElseIf{$Flexible Appointment\ after\ N_{start} $ {\bf and} $Next Fixed Appointment_{start}-N_{End} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
+            $relocate(Flexible Appointment)$\;
+            $insert(N)$\;
+            $return\ True$\;}
+        }
+        \uElseIf{$Flexible Appointments In (N_{end}-N_{start})=2$}{
+        
+            \uIf{$Flexible Appointment1\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointments_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment1, Previous Fixed Appointment_{end}, N_{start})$ {\bf and} $Flexible Appointment2_{start}\ after\ N_{end} $ {\bf and} $Next Appointment_{start}-N_{end} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
+            $relocate(Flexible Appointment1)$\;
+            $relocate(Flexible Appointment2)$\;
+            $insert(N)$\;
+            $return\ True$\;}
+            
+        }
+        $return\ False$
         
     }
 }
-\caption{Appointment Placement}
+\caption{Fixed Appointment Placement}
 \end{algorithm}
 
 \subsubsection{Flexible Appointment Placement Algorithm}
 
-If this new appointment is a flexible one, there are three possible situations:
+If this new appointment is a flexible one, there are two possible situations:
 \begin{itemize}
-    \item There is a free space in the user's schedule that fits the given appointment time interval and is at least as big as the flexible appointment's minimum duration - the new appointment is successfully inserted in the system.
-    \item There is no free space in the user's schedule that fits the given appointment time interval and is at least as big as the flexible appointment's minimum duration, but the system manages to reschedule an adjacent flexible appointment, leaving enough space for this appointment to be scheduled - the new appointment is successfully inserted in the user's schedule.
+    \item There is a free space in the user's schedule that fits the given appointment time interval and is at least as big as the flexible appointment's minimum duration plus the time to get there - the new appointment is successfully inserted in the system.
     \item There is no way of inserting that appointment into the user's schedule - the system returns an error message.
 \end{itemize}
 
+\begin{algorithm}[H]
+\SetAlgoLined
+\Begin{
+    $N\leftarrow New Flexible Appointment$\;
+        \uIf{$N_{timeInterval}=free$}{
+            $insert(N, N_{start}, N_{start}+N_{minDuration})$\;
+            $return True$\;}
+        {\uIf{$Fixed Appointments In (N_{end}-N_{start})$}{
+        
+            \uIf{$AppointmentAfter_{start} - AppointmentBefore_{end} > N_{minDuration} + TimeToGetToN $}{
+                $insert(N, AppointmentBefore_{end}, AppointmentBefore_{end}+N_{minDuration})$\;
+                $return\ True$\;
+            }
+        }
+        $return False$\;
+        
+    }
+}
+\caption{Flexible Appointment Placement}
+\end{algorithm}
 
 \subsection{Reachability Checker Algorithm}
 This second algorithm checks if an appointment is reachable or not. Given a schedule state and a new appointment to be inserted, it computes the time interval between the previous appointment end time and the starting time of the appointment to be inserted and, if this interval is smaller than the required time to get from the previous location to the new appointment's location, the system returns that the appointment is reachable. Otherwise, it is unreachable.
@@ -334,8 +364,8 @@ Bellow the pseudo code for this algorithm is presented, in order to better under
     
     $T3\leftarrow Time To Get From Old Appointment To New$\;
     \eIf{$\Delta T \geq T3$}{
-        $appointmentReachable$\;}
-    {$appointmentUnreachable$}
+        $return\ True$\;}
+    {$return\ False$}
     \caption{Reachability Checker}
 }
 \end{algorithm}
@@ -438,7 +468,11 @@ At last, \textbf{Portability} is achieved by offering a standard web service mec
   \hline
   21/11/2017 & Runtime View and Algorithm Design & 4 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{36} \\ 
+  22/11/2017 & Algorithm Design & 2 \\
+  \hline
+  23/11/2017 & Algorithm Design and Runtime View & 1 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{39} \\ 
   \hline
 \end{tabular}
 \end{center}
