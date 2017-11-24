@@ -73,7 +73,10 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{ER}: Entity Relationship Model\\
 \textit{MVC}: Model-View-Controller\\
 \textit{SOA}: Service Oriented Architecture\\
-\textit{JSON}: JavaScript Object Notation
+\textit{REST}: Representational State Transfer\\
+\textit{JSON}: JavaScript Object Notation\\
+\textit{JSP}: JavaServer Pages\\
+\textit{EJB}: Enterprise JavaBeans
 \subsubsection{Abbreviations}
 
 
@@ -182,7 +185,7 @@ The main purpose of this section is to show how the software components describe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{deploymentView.png}
+    \includegraphics[scale=0.41]{deploymentView.png}
     \caption{Deployment View of the system}
     \label{fig:componentView}
 \end{figure}
@@ -197,6 +200,15 @@ The following diagrams are intended to describe the interactions between the mai
     \includegraphics[scale=0.48, angle=-90, origin=c]{loginRuntimeView.png}
     \caption{User Login}
     \label{fig:loginRuntime}
+\end{figure}
+
+\subsubsection{Create Appointment}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.45, angle=-90, origin=c]{appointmentRuntimeView.png}
+    \caption{User Appointment Creation}
+    \label{fig:appointmentRuntime}
 \end{figure}
 
 \subsubsection{Change Preference}
@@ -258,8 +270,13 @@ In this section the interfaces through which the different system's components i
 
 \subsubsection{Data Mapper} This architectural pattern is a data source architectural pattern. It consists of a layer of software that separates the domain layer objects from the database. Its responsible for transferring data between the two while keeping them isolated from each other and from the mapper itself.
 
+\subsubsection{REST} A REST architectural style with JSON data model format is also being used to allow the communication between the User Application and the Server, being this based on HTTP requests (POST, GET, PUT and DELETE to name the most important ones).
+
 \subsubsection{Other design decisions}
-A REST communication protocol with JSON data model format is also being used to allow the communication between the User Application and the Server, being this based on HTTP requests (POST, GET, PUT and DELETE to name the most important ones).
+\begin{itemize}
+    \item \textbf{Application Server and Web Server:} GlassFish 4.1 was chosen since it provides containers for both the EJB and the JSP pages.
+    \item \textbf{DMBS:} MySQL was chosen as DBMS since it's free and one of the most popular DBMS, with a big community and lots of documentation.
+\end{itemize}
 
 \section{Algorithm Design}
 In this section it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained using pseudo-code notation.
@@ -359,7 +376,7 @@ Bellow the pseudo code for this algorithm is presented, in order to better under
         $L1\leftarrow User Location$\;
         $T1\leftarrow 0$
     }
-    $T2\leftarrow Previous Appointment_{startTime}$\;
+    $T2\leftarrow NewAppointment_{startTime}$\;
     $\Delta T\leftarrow T2-T1$\;
     
     $T3\leftarrow Time To Get From Old Appointment To New$\;
@@ -421,7 +438,7 @@ All of the design choices presented in this document were made with the goals an
         \item The \textbf{Account Controller}, which provides the visitors the ability to manage its account preferences and change them according to his personal preferences.
     \end{itemize}
 \end{itemize}
-For all of the requirements the \textbf{Router Component} takes part in the interaction, but only maps the User Application requests to the respective controller, not being relevant to refer to in every goal. So does the \textbf{Model Component}, the \textbf{Data Mappers Component} and the \textbf{Database Component}, since our application has to access the database (either to read or to write) every time it executes an operation.
+For all of the requirements the \textbf{Router Component} takes part in the interaction, but only maps the User Application requests to the respective controller, not being relevant to refer to in every goal. So does the \textbf{Model Component}, the \textbf{Data Mappers Component} and the \textbf{Database Component}, since our application has to access the database (either to read or to write) every time it executes one of the main system operations/functionality.
 
 \subsection{Non-Functional Requirements}
 
@@ -434,6 +451,41 @@ The usage of a 3 tier infrastructure is the key to achieve most of these require
 At last, \textbf{Portability} is achieved by offering a standard web service mechanism based on JSON through the API's. This allows the system to be invoked from any platform with internet access, not restricting the system to a specific operating system, programming language or hardware brand.
 
 \section{Implementation, Integration and Test Plan}
+Implementation, Integration, and Testing are 3 different activities that must be done together in order for a project to be developed in a correct way. It will be presented in the paragraphs below a plan for the implementation, integration, and testing of the different components that, together, form our system.
+
+
+The system is divided by layers, and as in a traditional layered architecture, the topmost layers depended on the lowest ones. This being said, the system must be implemented considering 3 different approaches:
+\begin{itemize}
+    \item Bottom-Up Approach
+    \item Top-Down Approach
+    \item Mix between Bottom-Up and Top-Down, which meet somewhere in the middle
+\end{itemize}
+
+The \textbf{second and third} approaches imply that a component will be implemented and tested without the need for the components that this depends on to be implemented and tested already. Although this might look like a good idea, it carries a more complex development process, since mocks would have to be built in order to test the behavior of these components after being implemented.
+Taking this into consideration, the \textbf{approach chosen to develop our system was a bottom-up approach.} This way, the components which do not depend on others will be the first ones to be developed and extensively tested, followed by the ones that only depend on those, until we reach the highest layer of the system. So, a component can be tested and integrated as soon as it's finished (or even close to being finished), allowing us to complete the development and testing phase almost in parallel.
+We must also keep in mind that in order to test the integration of two components, the main features of both of them should have already been developed and the related unit tests should have been performed. 
+
+\subsection{DBMS}
+The first component to be implemented is the DBMS. It shall be implemented and then fully tested before finishing the implementation of the layer above, since it has to be configured and operative in order to allow to test all of the components which need access to the database.
+    
+\subsection{Server}
+The next set of components to be implemented and tested are the ones that belong to the Business Layer, which encapsulates the business logic of the system. This layer is composed by the Server component and all of its sub-components. 
+
+First we should start by the \textbf{Data Mappers} sub-component, which is the Server component that mediates the interaction between the server and the database, and only depends on the DBMS component.
+
+After this, and following a critical-module-first approach, we should develop the \textbf{Appointment Controller and Travel Mean Controller} and the \textbf{Model components associated with this ones}. Both of this controllers require the interaction with the external services to be fully functional.
+
+The last sub-components of the server to be developed will be the \textbf{Account Controller and Router Controller} and the \textbf{Model components associated with this ones}.
+
+After being fully implemented, the Server component must be integrated with the DBMS component, as it needs the DBMS to work properly.
+
+Before integration testing of the two integrated components, the used external services shall be configured and fully operative.
+After this, the Server can be integrated with the database and shall be extensively tested, as it is the most critical and important part of the system.
+
+\subsection{User Application}
+The final part of the system to be implemented is the User Application, the topmost layer of the architecture. Since we opted for a thin client this shall be one of the easiest and fastest steps of the development process.
+When finished, it shall be integrated with the rest of the components of the system in order to test the system as a whole.
+
 
 \section{Effort Spent}
 
@@ -472,16 +524,24 @@ At last, \textbf{Portability} is achieved by offering a standard web service mec
   \hline
   23/11/2017 & Algorithm Design and Runtime View & 1 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{39} \\ 
+  23/11/2017 & Implementation, Integration and Test Plan & 2,5 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{41,5} \\ 
   \hline
 \end{tabular}
 \end{center}
 
 \section{References}
+
+\begin{thebibliography}{9}
+\bibitem{siteLayeredArchitecture} 
 https://www.safaribooksonline.com/library/view/software-architecture-patterns/9781491971437/ch01.html
-
+\bibitem{siteMartinFowler} 
 https://martinfowler.com/eaaCatalog/index.html
+\bibitem{FowlerBook} 
+Fowler, Martin. \textit{Patterns of Enterprise Application Architecture, 1st Edition}
 
-Patterns of Enterprise Application Architecture, Martin Fowler
+\end{thebibliography}
 
 \end{document}
+
