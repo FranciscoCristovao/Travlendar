@@ -61,14 +61,13 @@ Of course the system will fully support the features of a regular calendar appli
 \subsubsection{Definitions}
 \textit{Visitor}: A person who uses Travlendar+ for the first time, and is not yet registered.\\
 \textit{User}: A person who uses Travlendar+.\\
-\textit{Home Screen}: User interface screen that shows the current appointments.\\
 \textit{System}: defines the overall set of software components that implement the required functionality.\\
-\textit{Local Time}: time of the system.
 \subsubsection{Acronyms}
 \textit{API}: Application Programming Interface\\
 \textit{DD}: Design Document\\
 \textit{ATM: Azienda Trasporti Milanesi}\\
-\textit{DD}: Database\\
+\textit{UX Diagram}: User Experience Diagram\\
+\textit{DB}: Database\\
 \textit{SQL}: Structured Query Language\\
 \textit{ER}: Entity Relationship Model\\
 \textit{MVC}: Model-View-Controller\\
@@ -76,7 +75,8 @@ Of course the system will fully support the features of a regular calendar appli
 \textit{REST}: Representational State Transfer\\
 \textit{JSON}: JavaScript Object Notation\\
 \textit{JSP}: JavaServer Pages\\
-\textit{EJB}: Enterprise JavaBeans
+\textit{EJB}: Enterprise JavaBeans\\
+\textit{JEE}: Java Platform, Enterprise Edition
 \subsubsection{Abbreviations}
 
 
@@ -103,13 +103,13 @@ Other than this introductory chapter, this DD is organized in seven more chapter
 
 In the third chapter the most \textbf{relevant algorithms} are analyzed and discussed with the appropriate detail and depth, in order to describe the way the system's most critical operations are driven and executed.
 
-The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI.
+The fourth chapter deals with the \textbf{user interface design}. This chapter mainly refers to the mockups provided in the RASD, but it will also include some details on the user interaction with the UI, illustrated by a UX Diagram.
 
 The fifth chapter explains how the \textbf{requirements defined in the RASD are fulfilled by the design decisions} that were taken, and how these \textbf{requirements map} to the design elements and decisions defined in the DD.
 
-In the sixth, chapter it is provided a \textbf{implementation, integration and test plan}, defining the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how this integration will be tested alongside with the development of the system.
+In the sixth chapter, it is provided a \textbf{implementation, integration and test plan}, defining the order in which the different subcomponents of the system will be implemented, the order in which they will be integrated and how this integration will be tested alongside with the development of the system.
 
-In the seventh chapter the \textbf{effort spent by each of the group member} is described by specifying the number of hours each member of the group worked on the development of this document, and on the final chapter, the tools we used to develop this DD are specified.
+In the seventh chapter the \textbf{effort spent by each of the group members} is described by specifying the number of hours each member of the group worked on the development of this document and, on the final chapter, \textbf{the tools we used to develop this DD are specified}.
 
 
 \section{Architectural Design}
@@ -119,7 +119,7 @@ In the seventh chapter the \textbf{effort spent by each of the group member} is 
 In the following paragraphs it will be presented a general overview of how the system is architected, especially focused on the different logically separated layers.
 As described on the RASD, Travlendar+ is supposed to be fully scalable and portable, so a layered architecture is the one that best fits these requirements. Given that the system only provides an Application interface, there's no need for a fourth layer isolating the web server from the application server. 
 
-With this in mind, the system will have a three-layer architecture, organized as shown bellow:
+With this in mind, the system will have a three-layer architecture, organized as shown below:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.45]{highLevelView.png}
@@ -128,9 +128,9 @@ With this in mind, the system will have a three-layer architecture, organized as
 \end{figure}
 The \textbf{Presentation Layer} is the most external layer of the system, and is responsible for handling all GUI communication and logic. This layer does not handle data or process business rules, but it forwards all the requests to the layers bellow and translates the system operations results of these requests to something that users can understand. It is the only layer of the system that users can access directly and interact with.
 
-The \textbf{Business Layer} implements all core functionality of the system. It's in this layer that the application logic and business rules are implemented, in particular, all the operations related to a user account and the appointment creation and management are performed by components of this layer. Given the importance of this layer (business logic and application server), it should be located in a "demilitarized zone". This layer interacts with the APIs exposed by the Data Layer in order to store and retrieve data. The business layer also depends on some third party systems and the external services they provide (specifically for the implementation of the appointment creation and management and travel mean functionality). These external services are directly invoked by some of the classes of the Business Layer using a public API provided by those.
+The \textbf{Business Layer} implements all core functionality of the system. It's in this layer that the application logic and business rules are implemented, in particular, all the operations related to a user account and the appointment creation and management are performed by components of this layer. This layer interacts with the APIs exposed by the Data Layer in order to store and retrieve data. The business layer also depends on some third party systems and the external services they provide (specifically for the implementation of the appointment creation and management and travel mean functionality). These external services are directly invoked by some of the classes of the Business Layer using a public API provided by those.
 
-At last, the \textbf{Data Layer} is the lowest layer of the architecture and includes the data persistence mechanisms responsible for data storage and management (rather than raw DBMS connections). It also provides an API to the Business Layer that exposes methods of managing the stored data without creating dependencies on the data storage mechanisms, promoting the encapsulation of the persistence mechanisms and avoiding data exposition. 
+At last, the \textbf{Data Layer} is the lowest layer of the architecture and includes the data persistence mechanisms responsible for data storage and management. It also provides an API to the Business Layer that exposes methods of managing the stored data without creating dependencies on the data storage mechanisms, promoting the encapsulation of the persistence mechanisms and avoiding data exposition. 
 
 Even though the \textbf{Third Party Services} don't belong to any particular layer, these services are illustrated in the figure above in order to highlight that the interaction with these will happen at the level of the Business Layer.
 \subsection{Component View}
@@ -143,7 +143,7 @@ In the following diagram, we can see the component view of the system (the more 
     \caption{Component Diagram of the system}
     \label{fig:componentView}
 \end{figure}
-The \textbf{User Application} is the component responsible for providing the user interfaces that allow him to interact with the system and all of its functionality. Since a thin-client is being used to implement a client/server architecture, the bulk of the data processing occurs on the server. Given this, the User Application component will act as a simple "terminal" to send requests to the server, being therefore quite simple and not needed to go into further detail.
+The \textbf{User Application} is the component responsible for providing the user interfaces that allow the user to interact with the system and all of its functionality. Since a thin-client architecture is being used to implement a client/server architecture, the bulk of the data processing occurs on the server. Given this, the User Application component will act as a simple "terminal" to send requests to the server, being therefore quite simple and not needed to go into further detail.
 
 The \textbf{Server} is the main component of the system, responsible for the data processing in order to provide all of the system's functionality. Given its complexity, it will be analyzed in further detail later in this section.
 
@@ -152,7 +152,7 @@ The \textbf{Database Management System (DBMS)} is the component responsible for 
 \subsubsection{Server detailed analysis}
 Being the most complex component of the system, it is useful to analyze in detail the Server's constitution.
 
-As mentioned previously, this component is primarily responsible for all operations related to system functionality. More specifically, this component is divided into seven sub-components, each related to a different kind of functionality and operations:
+As mentioned previously, this component is primarily responsible for all operations related to system functionality. More specifically, this component is divided into six sub-components, each related to a different kind of functionality and operations:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.426]{serverComponentView.png}
@@ -162,8 +162,7 @@ As mentioned previously, this component is primarily responsible for all operati
 \begin{itemize}
     \item The \textbf{Router} sub-component receives the requests from the User Application and forwards (routes) them to the corresponding controller.
     \item The \textbf{Travel Mean Controller} sub-component performs all the necessary operations to compute the best travel means to get to an appointment, given the schedule at that time. This module is the one with more external interfaces since it needs to gather data from the transport services and weather services in the city of Milan in order to perform its functions.
-    \item The \textbf{Location Controller} sub-component implements all methods for updating the location of the user, travel means or appointment, interacting directly with the Maps and Geolocation API.
-    \item The \textbf{Appointment Controller} sub-component performs all the necessary operations that allow the user to create, edit and delete an appointment. It is also responsible for all the needed procedures that allow the user to always have the best possible schedule: schedule and arrange the appointments according to the parameters the user defines for each appointment and based on the time the user needs to get from one appointment to another (data computed by the Travel Mean Controller, which explains the dependency from this component). This, allied with the Travel Mean Controller, fulfill all the requirements related to the appointment creation and managing.
+    \item The \textbf{Appointment Controller} sub-component performs all the necessary operations that allow the user to create, edit and delete an appointment. It is also responsible for all the needed procedures that allow the user to always have the best possible schedule: schedule and arrange the appointments according to the parameters the user defines for each appointment and based on the time the user needs to get from one appointment to another (data computed by the Travel Mean Controller, which explains the interface to this component). This, allied with the Travel Mean Controller, fulfills all the requirements related to the appointment creation and managing.
     \item The \textbf{Account Controller} sub-component implements all the methods for inserting or updating information about the users. More specifically, it allows the creation of new users (registration of visitors) and login of already existing users. It also performs all the necessary operations to allow the user to edit all of his preferences related to the travel means.
     \item The \textbf{Model} sub-component (and all of its sub-components) manages the behavior and data of the application domain and responds to requests or instructions by the respective controller.
     \item The \textbf{Data Mappers} sub-component is a layer of software which separates the model from the database and acts as a "middle-man" for the interactions between these two.
@@ -181,7 +180,7 @@ The following ER provides a graphical representation of the conceptual model of 
 \end{figure}
 
 \subsection{Deployment View}
-The main purpose of this section is to show how the software components described above are going to be deployed in the system's hardware infrastructures. This characteristic makes the developers task easier, since the mapping between software and hardware becomes explicit.
+The main purpose of this section is to show how the software components described above are going to be deployed in the system's hardware infrastructures. This characteristic makes the developer's task easier since the mapping between software and hardware becomes explicit.
 
 \begin{figure}[H]
     \centering
@@ -226,22 +225,26 @@ In this section the interfaces through which the different system's components i
     \item The \textbf{UserAppIntf} interface represents the way the User Application interacts with the Server, being this the only interface through which these two can communicate. This interface provides all of the methods provided by the \textbf{AppointmentIntf} and the \textbf{AccountIntf}.
     \item The \textbf{AppointmentIntf} interface represents the way components can interact with the Appointment Controller, responsible for managing all of the aspects associated with the appointment management. This interface provides the following methods:
     \begin{itemize}
-        \item createAppointment(string: name, string: description, date: from, date: to, float: longitude, float: latitude): receives the necessary data to create an Appointment and creates it
-        \item createFlexibleAppointment(string: name, string: description, date: from, date: to, time: minDuration float: longitude, float: latitude): receives the necessary data to create a Flexible Appointment and creates it
+        \item createAppointment(string: name, string: description, date: from, date: to, float: longitude, float: latitude): receives the necessary data to create an Appointment and creates it.
+        \item createFlexibleAppointment(string: name, string: description, date: from, date: to, time: minDuration float: longitude, float: latitude): receives the necessary data to create a Flexible Appointment and creates it.
         \item editAppointment(int: appointmentId, data): receives the data parameters related to an appointment that are supposed to be changed and the id of that appointment. The data parameters are the ones described above.
         \item deleteAppointment(int: appointmentId): deletes the appointment that matches the appointment Id.
         \item checkReachibility(appointmentDetails): checks if the appointment to be created/edited is reachable or not.
     \end{itemize}
     \item The \textbf{AccountIntf} interface represents the way components can interact with the Account Controller, responsible for managing all of the aspects associated with the user account. This interface provides the following methods:
     \begin{itemize}
-        \item createAccount(string: username, string: email, string: password): registers a visitor into the system, creating an account for him
-        \item loginUser(string: username, string: password): logs a user into the system
-         \item recoverPassword(string: email): sends a new password to the user email, deleting the previous one
-        \item setPreference(string: newPreference): changes a user preference to its new value
+        \item createAccount(string: username, string: email, string: password): registers a visitor into the system, creating an account for him.
+        \item loginUser(string: username, string: password): logs a user into the system.
+         \item recoverPassword(string: email): sends a new password to the user email, deleting the previous one.
+        \item setPreference(string: newPreference): changes a user preference to its new value.
+    \end{itemize}
+    \item The \textbf{TravelMeanIntf} interface represents the way components can interact with the Travel Mean Controller, responsible for managing all of the aspects associated with the travel means used to get to the appointments. This interface provides the following methods:
+    \begin{itemize}
+        \item getBestPath(appointmentDetails): receives the data parameters related to the appointment in question and returns the best travel mean to get to that appointment.
     \end{itemize}
     \item The \textbf{DataAccessIntf} interface represents the way components can interact with the Data Mappers Component. It provides all of the needed methods and mechanisms to abstract the interaction between the database and the system.
     \item The \textbf{Maps and Geolocation API} interface represents the way components can interact with the Maps and Geolocation service. It provides all the needed methods to get information about the appointment location and the best routes and travel means to get to that location.
-    \item The \textbf{Weather API} interface represents the way components can interact with the Weather service. It provides all the needed methods to get information about the weather forecast in a specific place and time.
+    \item The \textbf{Weather API} interface represents the way components can interact with the Weather Service. It provides all the needed methods to get information about the weather forecast in a specific place and time.
     \item The \textbf{Mobike API} interface represents the way components can interact with the Mobike service. It provides all the needed methods to get information about the bicycle's location and cost.
     \item The \textbf{DriveNow API} interface represents the way components can interact with the DriveNow service. It provides all the needed methods to get information about the cars location, status, and cost.
     \item The \textbf{ATM API} interface represents the way components can interact with the ATM service. It provides all the needed methods to get information about the travel mean schedule.
@@ -262,7 +265,7 @@ In this section the interfaces through which the different system's components i
 
 \subsubsection{Layered Architecture} This architectural pattern promotes a great level of separation of concerns between the various components of the system, given that every component operates at a single logical layer of abstraction. This design choice also simplifies the implementation and testing phase of the system: since the layers are isolated from each other, it is possible to test a specific layer even if the underlying layers aren't implemented, using mocks or stubs to simulate the functionality of those.
 
-\subsubsection{3-Tier Physical Architecture} This architectural style allows the various components of the system on different devices, given the decoupling that exists between the modules. It also allows for any of the three tiers to be upgraded or replaced independently in response to changes in requirements or technology, improving the system's scalability. The system will be composed of 3 tiers: Presentation tier, Business tier (the business logic of the system) and Data tier.
+\subsubsection{3-Tier Physical Architecture} This architectural style allows the various components of the system to be deployed on different devices, given the decoupling that exists between the modules. It also allows for any of the three tiers to be upgraded or replaced independently in response to changes in requirements or technology, improving the system's scalability. The system will be composed of 3 tiers: Presentation tier, Business tier (the business logic of the system) and Data tier.
 
 \subsubsection{Model-View-Controller} This architectural pattern divides a given application into 3 interconnected parts, separating the internal representation of information from the way this information is presented to the user. This is one of the most used patterns to promote decoupling between the major components of a system, allowing for efficient code reuse and parallel development.
 
@@ -274,14 +277,13 @@ In this section the interfaces through which the different system's components i
 
 \subsubsection{Other design decisions}
 \begin{itemize}
-    \item \textbf{Application Server and Web Server:} GlassFish 4.1 was chosen since it provides containers for both the EJB and the JSP pages.
+    \item \textbf{Application Server:} GlassFish 4.1 was chosen since it provides containers for both the EJB and the JSP pages, and is a full Java EE Application server.
     \item \textbf{DMBS:} MySQL was chosen as DBMS since it's free and one of the most popular DBMS, with a big community and lots of documentation.
 \end{itemize}
 
 \section{Algorithm Design}
-In this section it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained using pseudo-code notation.
+In this section, it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained using pseudo-code notation.
 
-The fourth and final algorithm computes the Best Travel Mean for the user to get to a specific appointment.
 
 \subsection{Appointment Placement Algorithm}
 The first and second algorithms check if it is possible to insert a new Fixed Appointment and a new Flexible Appointment, respectively, in the user's schedule and, if possible, inserts it.
@@ -304,19 +306,19 @@ If this new appointment is a fixed one, there are three possible situations:
             $return\ True$\;}
         {\uIf{$Flexible Appointments In (N_{end}-N_{start})=1$}{
         
-            \uIf{$Flexible Appointment\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, Previous Appointment_{end}, N_{start})$}{
+            \uIf{$Flexible Appointment\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointment_{minDuration} + TimeToGetToFlexibleAppointment + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, Previous Appointment_{end}, N_{start})$}{
             $relocate(Flexible Appointment)$\;
             $insert(N)$\;
             $return\ True$\;}
             
-            \uElseIf{$Flexible Appointment\ after\ N_{start} $ {\bf and} $Next Fixed Appointment_{start}-N_{End} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
+            \uElseIf{$Flexible Appointment\ after\ N_{start} $ {\bf and} $Next Fixed Appointment_{start}-N_{End} > Flexible Appointment_{minDuration} + TimeToGetToFlexibleAppointment + TimeToGetToNextFixedAppointment$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
             $relocate(Flexible Appointment)$\;
             $insert(N)$\;
             $return\ True$\;}
         }
         \uElseIf{$Flexible Appointments In (N_{end}-N_{start})=2$}{
         
-            \uIf{$Flexible Appointment1\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointments_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment1, Previous Fixed Appointment_{end}, N_{start})$ {\bf and} $Flexible Appointment2_{start}\ after\ N_{end} $ {\bf and} $Next Appointment_{start}-N_{end} > Flexible Appointment_{minDuration} + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
+            \uIf{$Flexible Appointment1\ before\ N_{start} $ {\bf and} $Previous Fixed Appointment_{end}-N_{start} > Flexible Appointment1_{minDuration} + TimeToGetToFlexibleAppointment + TimeToGetToN$ {\bf and} $possibleInterval(Flexible Appointment1, Previous Fixed Appointment_{end}, N_{start})$ {\bf and} $Flexible Appointment2_{start}\ after\ N_{end} $ {\bf and} $NextFixe Appointment_{start}-N_{end} > Flexible Appointment_{minDuration} + TimeToGetToFlexibleAppointment + TimeToGetToNextAppointment$ {\bf and} $possibleInterval(Flexible Appointment, N_{end}, Next Appointment_{start})$}{
             $relocate(Flexible Appointment1)$\;
             $relocate(Flexible Appointment2)$\;
             $insert(N)$\;
@@ -343,12 +345,12 @@ If this new appointment is a flexible one, there are two possible situations:
 \Begin{
     $N\leftarrow New Flexible Appointment$\;
         \uIf{$N_{timeInterval}=free$}{
-            $insert(N, N_{start}, N_{start}+N_{minDuration})$\;
+            $insert(N)$\;
             $return True$\;}
         {\uIf{$Fixed Appointments In (N_{end}-N_{start})$}{
         
-            \uIf{$AppointmentAfter_{start} - AppointmentBefore_{end} > N_{minDuration} + TimeToGetToN $}{
-                $insert(N, AppointmentBefore_{end}, AppointmentBefore_{end}+N_{minDuration})$\;
+            \uIf{$AppointmentAfter_{start} - AppointmentBefore_{end} > N_{minDuration} + TimeToGetToN + TimeToGetToAppointmentAfter $}{
+                $insert(N)$\;
                 $return\ True$\;
             }
         }
@@ -360,7 +362,7 @@ If this new appointment is a flexible one, there are two possible situations:
 \end{algorithm}
 
 \subsection{Reachability Checker Algorithm}
-This second algorithm checks if an appointment is reachable or not. Given a schedule state and a new appointment to be inserted, it computes the time interval between the previous appointment end time and the starting time of the appointment to be inserted and, if this interval is smaller than the required time to get from the previous location to the new appointment's location, the system returns that the appointment is reachable. Otherwise, it is unreachable.
+This third algorithm checks if an appointment is reachable or not. Given a schedule state and a new appointment to be inserted, it computes the time interval between the previous appointment end time and the starting time of the appointment to be inserted and, if this interval is smaller than the required time to get from the previous location to the new appointment's location, the system returns that the appointment is reachable. Otherwise, it is unreachable.
 
 Bellow the pseudo code for this algorithm is presented, in order to better understand it:
 
@@ -394,6 +396,7 @@ One of the most important things to take into consideration when designing an in
 Another thing that was taken into consideration while designing the interfaces was the adaptability of it to the different smartphone screen resolutions and form factors available on the market. To satisfy this requirement, the interface was drawn in a minimalist way, without demanding animations and small details that would make it impossible to use on smaller screens with low resolution.
 
 The mockups of the UI of our system can be found in \textbf{section 3.1.1 of the RASD} and were designed with all this in mind: to be as simple and intuitive to use as possible while providing to the user all of the system's functionality.
+
 \subsection{UX Diagram}
 The following UX Diagram provides additional information about the way the user interacts with the system through the mobile application, and have the purpose of complementing the UI mockups provided in the RASD document with a more "dynamic" view over the interface.
 
@@ -416,21 +419,21 @@ All of the design choices presented in this document were made with the goals an
     \end{itemize}
     \item \textbf{{[G2]}} Allow a logged user to create an appointment (R5-R10).
     \begin{itemize}
-        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically the ability to create a new appointment.
+        \item The \textbf{Appointment Controller}, which provides all of the business logic related to the appointments management, more specifically the ability to create a new appointment.
         \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
     \item \textbf{{[G3]}} Allow a logged user to edit an appointment (R6-R7 and R11-R13).
     \begin{itemize}
-        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically the ability to edit a previously created appointment.
+        \item The \textbf{Appointment Controller}, which provides all of the business logic related to the appointments management, more specifically the ability to edit a previously created appointment.
         \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
     \item \textbf{{[G4]}} Allow a logged user to delete an appointment (R14).
     \begin{itemize}
-        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to an appointments management, specifically to delete an appointment from the user's schedule.
+        \item The \textbf{Appointment Controller}, which provides all of the business logic related to an appointments management, specifically to delete an appointment from the user's schedule.
     \end{itemize}
     \item \textbf{{[G5]}} Allow a logged user to have his schedule planned in the best possible way (R15-R19).
     \begin{itemize}
-        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically to recompute the best travel means to get to all appointments when any change in the calendar occurs.
+        \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically to make any change in the calendar related to insertion or deletion of appointments.
         \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
     \end{itemize}
     \item \textbf{{[G6]}} Allow a logged user to define preferences related to travel means (R20-R24).
@@ -444,9 +447,9 @@ For all of the requirements the \textbf{Router Component} takes part in the inte
 
 The non-functional requirements were no exception and were also taken into consideration when making the Design Choices for the system. In particular, this analysis will be focused on the \textbf{Performance, Reliability, Availability, Security}, and \textbf{Portability} requirements.
 
-The usage of a 3 tier infrastructure is the key to achieve most of these requirements. This infrastructure allows us not only to achieve high levels of \textbf{Performance} (components with different hardware needs can be deployed in more powerful machines) but also satisfying levels of \textbf{Reliability} \textbf{Availability} as, thanks to the low coupling between the different components, it allows them to be distributed over the network, possibly replicated and in different server farms (highly increasing fault tolerance).
+The usage of a 3 tier infrastructure is the key to achieve most of these requirements. This infrastructure allows us not only to achieve high levels of \textbf{Performance} (components with different hardware needs can be deployed in more powerful machines) but also satisfying levels of \textbf{Reliability} and \textbf{Availability} as, thanks to the low coupling between the different components, it allows them to be distributed over the network, possibly replicated and in different server farms (highly increasing fault tolerance).
 
-\textbf{Security} is achieved thanks to software and hardware measures. At software level, all interface methods check if the call parameters are valid before executing its main logic, and if the caller is authorized. The database APIs will also be protected against SQL Injection and all messages between different components of the system and external APIs will be encrypted and have unique identifiers, preventing this way man-in-the-middle attacks (more specifically replay attacks) and encripting all of the critical data.
+\textbf{Security} is achieved thanks to software and hardware steps. At the software level, all interface methods check if the call parameters are valid before executing its main logic and if the caller is authorized to invoke them. The database APIs will also be protected against SQL Injection and all messages between different components of the system and external APIs will be encrypted and have unique identifiers, encrypting this way all of the critical data and preventing man-in-the-middle attacks (more specifically replay attacks).
 
 At last, \textbf{Portability} is achieved by offering a standard web service mechanism based on JSON through the API's. This allows the system to be invoked from any platform with internet access, not restricting the system to a specific operating system, programming language or hardware brand.
 
@@ -454,7 +457,7 @@ At last, \textbf{Portability} is achieved by offering a standard web service mec
 Implementation, Integration, and Testing are 3 different activities that must be done together in order for a project to be developed in a correct way. It will be presented in the paragraphs below a plan for the implementation, integration, and testing of the different components that, together, form our system.
 
 
-The system is divided by layers, and as in a traditional layered architecture, the topmost layers depended on the lowest ones. This being said, the system must be implemented considering 3 different approaches:
+The system is divided into layers, and as in a traditional layered architecture, the topmost layers depend on the lowest ones. This being said, the system must be implemented using 1 out of 3 different approaches:
 \begin{itemize}
     \item Bottom-Up Approach
     \item Top-Down Approach
@@ -462,16 +465,16 @@ The system is divided by layers, and as in a traditional layered architecture, t
 \end{itemize}
 
 The \textbf{second and third} approaches imply that a component will be implemented and tested without the need for the components that this depends on to be implemented and tested already. Although this might look like a good idea, it carries a more complex development process, since mocks would have to be built in order to test the behavior of these components after being implemented.
-Taking this into consideration, the \textbf{approach chosen to develop our system was a bottom-up approach.} This way, the components which do not depend on others will be the first ones to be developed and extensively tested, followed by the ones that only depend on those, until we reach the highest layer of the system. So, a component can be tested and integrated as soon as it's finished (or even close to being finished), allowing us to complete the development and testing phase almost in parallel.
+Taking this into consideration, the \textbf{approach chosen to develop our system was a bottom-up approach.} This way, the components which do not depend on others will be the first ones to be developed and extensively tested, followed by the ones that only depend on those, until we reach the highest layer of the system, with the components that have no other component depending on them. Thanks to this a component can be tested and integrated as soon as it's finished (or even close to being finished), allowing us to complete the development and testing phase almost in parallel.
 We must also keep in mind that in order to test the integration of two components, the main features of both of them should have already been developed and the related unit tests should have been performed. 
 
 \subsection{DBMS}
-The first component to be implemented is the DBMS. It shall be implemented and then fully tested before finishing the implementation of the layer above, since it has to be configured and operative in order to allow to test all of the components which need access to the database.
+The first component to be implemented is the DBMS. It shall be implemented and then fully tested before finishing the implementation of the layer above since it has to be configured and operative in order to allow to test all of the components which need access to the database.
     
 \subsection{Server}
-The next set of components to be implemented and tested are the ones that belong to the Business Layer, which encapsulates the business logic of the system. This layer is composed by the Server component and all of its sub-components. 
+The next set of components to be implemented and tested are the ones that belong to the Business Layer, which encapsulates the business logic of the system. This layer is composed of the Server component and all of its sub-components. 
 
-First we should start by the \textbf{Data Mappers} sub-component, which is the Server component that mediates the interaction between the server and the database, and only depends on the DBMS component.
+First, we should start with the \textbf{Data Mappers} sub-component, which is the Server component that mediates the interaction between the server and the database, and only depends on the DBMS component.
 
 After this, and following a critical-module-first approach, we should develop the \textbf{Appointment Controller and Travel Mean Controller} and the \textbf{Model components associated with this ones}. Both of this controllers require the interaction with the external services to be fully functional.
 
@@ -480,7 +483,7 @@ The last sub-components of the server to be developed will be the \textbf{Accoun
 After being fully implemented, the Server component must be integrated with the DBMS component, as it needs the DBMS to work properly.
 
 Before integration testing of the two integrated components, the used external services shall be configured and fully operative.
-After this, the Server can be integrated with the database and shall be extensively tested, as it is the most critical and important part of the system.
+After this, the Server can be integrated with the DBMS and shall be extensively tested, as it is the most critical and important part of the system.
 
 \subsection{User Application}
 The final part of the system to be implemented is the User Application, the topmost layer of the architecture. Since we opted for a thin client this shall be one of the easiest and fastest steps of the development process.
@@ -524,12 +527,56 @@ When finished, it shall be integrated with the rest of the components of the sys
   \hline
   23/11/2017 & Algorithm Design and Runtime View & 1 \\
   \hline
-  23/11/2017 & Implementation, Integration and Test Plan & 2,5 \\
+  24/11/2017 & Implementation, Integration and Test Plan & 2,5 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{41,5} \\ 
+  25/11/2017 & Final DD details & 1,5 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{43} \\ 
   \hline
 \end{tabular}
 \end{center}
+
+
+\begin{center}
+\begin{tabular}{ |p{0.25\textwidth}|p{0.4\textwidth}|p{0.25\textwidth}| } 
+ \hline
+ \textbf{DATE} & \textbf{TASK} & \textbf{HOURS} \\ 
+  \hline
+ 08/11/2017 & Purpose and Document Structure & 1 \\ 
+  \hline
+  09/11/2017 & High Level Component description & 1 \\ 
+  \hline
+  11/11/2017 & Component View & 2 \\ 
+  \hline
+  14/11/2017 & Runtime View & 3 \\ 
+  \hline
+  15/11/2017 & User Interface (UX Diagram) & 2 \\ 
+  \hline
+  16/11/2017 & Architectural Patterns & 1 \\
+  \hline
+  18/11/2017 & Runtime View & 3 \\
+  \hline
+  19/11/2017 & Algorithm Design & 2 \\
+  \hline
+  20/11/2017 & Requirements Traceability & 1 \\
+  \hline
+  22/11/2017 & Implementation, Integration and Test Plan & 2 \\
+  \hline
+  24/11/2017 & DD Review & 1,5 \\
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{19,5} \\ 
+  \hline
+\end{tabular}
+\end{center}
+
+
+\section{Used Tools}
+\begin{itemize}
+    \item ShareLateX
+    \item StarUML 2.8.0
+    \item Sketch 47.1
+    \item Visual Paradigm 14.2
+\end{itemize}
 
 \section{References}
 
@@ -544,4 +591,3 @@ Fowler, Martin. \textit{Patterns of Enterprise Application Architecture, 1st Edi
 \end{thebibliography}
 
 \end{document}
-
