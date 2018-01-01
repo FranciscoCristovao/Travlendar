@@ -24,7 +24,7 @@
 
     \Huge\textbf{Software Engineering 2 Project - Travlendar+}
     \rule{12cm}{0.5pt}
-    \Huge\textbf{Requirement Analysis and Specification Document - V1}
+    \Huge\textbf{Requirement Analysis and Specification Document - V1.2}
     \today
     \end{center}
     
@@ -84,13 +84,33 @@ Of course the system will fully support the features of a regular calendar appli
 \textbf{Version 1.1:} 
 \begin{itemize}
     \item Fixed a number of typos all over the document.
+    \item Added the "Change Password" use case to the user use case diagram.
+    \item Changed the layout of some buttons on the User Interfaces.
+    \item Added Domain Assumption 13 to better cover all of the possible situations when an appointment can be created: 
+        \begin{itemize}
+            \item When there are no previous appointments in that day, the system assumes that the location from where the user is going to the appointment is his house
+        \end{itemize}
+    \item Added Domain Assumption 14 to better cover all of the possible situations when an appointment can be created: 
+        \begin{itemize}
+            \item When there are no further appointments in that day, the system assumes that the location where the user is going after the appointment is his house.
+        \end{itemize}
+    \item Added Domain Assumption 15 since it is a reasonable assumption that fits the requirements and highly simplifies the appointment management: 
+        \begin{itemize}
+            \item The possible interval for a flexible appointment cannot be overlapped by the possible interval for another flexible appointment, even if there's enough space for the minimum duration of both.
+        \end{itemize}
     \item Modified Goal 1 to better express what the system is intended to do: 
         \begin{itemize}
             \item Allow only registered users to access the most relevant functionality of the system.
         \end{itemize}
-    \item Modified Goal 1 to include the following requirement:
+    \item Modified Goal 1 to include the following requirement (R4):
         \begin{itemize}
             \item The system shall not allow a visitor to access more than the registration functionality.
+        \end{itemize}
+    \item Modified the Alloy model in order to meet the changes in the domain assumptions, more specifically the Domain Assumption 15:
+        \begin{itemize}
+            \item Changed the way the flexible appointments where modeled: they now contemplate the existence of a "real" start and end time, where the appointment is scheduled, and a start and end time for the interval where the appointment can be scheduled.
+            \item Added some facts to manage the restrictions of this new representation.
+            \item Changed the generated worlds in order to meet the changes in the Alloy model.
         \end{itemize}
 \end{itemize}
 \textbf{Version 1.0:} Initial Release
@@ -148,6 +168,10 @@ All of these types of users are of working age (20 to 70 years old, being this a
 [D10] Users don't need to confirm if they started or finished the appointment.\\{}
 [D11] An Appointment maps to only one User.\\{}
 [D12] The location of the users private car and bike is always known by the system.\\{}
+[D13] When there are no previous appointments in that day, the system assumes that the location from where the user is going to the appointment is his house.\\{}
+[D14] When there are no further appointments in that day, the system assumes that the location where the user is going after the appointment is his house.\\{}
+[D15] The possible interval for a flexible appointment cannot be overlapped by the possible interval for another flexible appointment, even if there's enough space for the minimum duration of both.\\{}\\{}
+\textbf{N.B.:} D15 was considered because if we considered that flexible and fixed appointments could overlap other flexible appointment's possible scheduling interval, the algorithm to manage the appointments would be really complex to implement and would provide extra functionally that is in some sort of way unnecessary given the domain of our system, more specifically the goal of having flexible appointments (the difference in complexity wouldn't justify the difference in functionality)
 
 
 \section{Specific Requirements}
@@ -160,11 +184,11 @@ These Mockups represent a basic idea of how the systems user interface will look
 \begin{figure}[H]
 \centering
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.47]{interfaceLogin.png}
+        \includegraphics[scale=0.44]{interfaceLogin.png}
         \label{fig:loginScreen}
     \end{subfigure}%
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.45]{interfaceRegister.png}
+        \includegraphics[scale=0.44]{interfaceRegister.png}
         \label{fig:registerScreen}
     \end{subfigure}
     \caption{Login Screen (left) and Register Screen (right)}
@@ -173,11 +197,11 @@ These Mockups represent a basic idea of how the systems user interface will look
 \begin{figure}[H]
 \centering
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.31]{interfaceHome.png}
+        \includegraphics[scale=0.445]{interfaceHome.png}
         \label{fig:homeScreen}
     \end{subfigure}%
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.32]{interfaceAppointment.png}
+        \includegraphics[scale=0.44]{interfaceAppointment.png}
         \label{fig:newAppointmentScreen}
     \end{subfigure}
     \caption{Home Screen (left) and Appointment Details Screen (right)}
@@ -186,11 +210,11 @@ These Mockups represent a basic idea of how the systems user interface will look
 \begin{figure}[H]
 \centering
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.43]{interfaceNewAppointment.png}
+        \includegraphics[scale=0.44]{interfaceNewAppointment.png}
         \label{fig:appointmentScreen}
     \end{subfigure}%
     \begin{subfigure}{.4\textwidth}
-        \includegraphics[scale=0.465]{interfaceSettings.png}
+        \includegraphics[scale=0.455]{interfaceSettings.png}
         \label{fig:settingsScreen}
     \end{subfigure}
     \caption{New Appointment Screen (left) and Settings Screen (right)}
@@ -509,9 +533,10 @@ To measure the systems maintainability a metric shall be used. This metric needs
 The first release of the system will be available for the mobile platform our target users use the most, IOS. Nonetheless, an Android version shall be released soon, and even a new platform may arise. So, it's crucial that the system is built in a way which makes it easy to deploy on different platforms. The portability measure consists of the cost that deploying the system in a new platform implies, and in this case, this cost should be smaller than the cost of deploying other similar apps.
 
 \section{Formal Analysis Using Alloy}
-In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them and is to be seen as an attempt at capturing the systems essential features.
-This model has the purpose of verifying if the properties defined for the system are being satisfied and if there are no constraints being violated.
-In this model, it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same and that only the status of two fixed appointments have to be different (the fact that a flexible appointment didn't start but the Local Time is already in the possible interval that it can start was considered an implementation detail, too difficult if even possible to represent in Alloy, and so two Flexible Appointments can be in the "started" state). Although this model is a simplified version of the "real world", it is enough to show that the model stands in the scope of the project (including all of the details would only increase complexity). 
+In this section is presented a possible Alloy formalization of the proposed system. This Alloy model illustrates the key concepts and entities that make up the system and the relationships between them, and is to be seen as an attempt at capturing the systems essential features.
+This model has the purpose of verifying if the properties defined for the system are possible to satisfy and if there are no constraints being violated.
+In this model, it was considered a subset of user preferences and travel means. It was also considered that the destination of all the travel means used to get to an appointment is the same. The Flexible appointments are assumed to have two different types of start and end times: the "real" start and end times, which are the times between which the appointment is going to take place, and the interval start and end times, which are the limits of the interval where the flexible appointment has to be placed, always fulfilling the minimum duration requirement.
+Although this model is a simplified version of the "real world", it is enough to show that the model stands in the scope of the project. 
 
 
 \begin{verbatim}
@@ -549,7 +574,8 @@ enum AppointmentStatus{
 sig FixedAppointment extends Appointment{}
 
 sig FlexibleAppointment extends Appointment{
-    minDuration: one Int
+    minDuration: one Int,
+    interval: one Time
 }{minDuration > 2}
 
 sig Time{
@@ -610,9 +636,19 @@ fact timeDoesntExistWithoutAppointment{
     all t1: Time | one a1: Appointment | t1 in a1.time
 }
 
+fact differentTimesCannotHaveSameStartAndEnd{
+    //Two times can't be identical 
+    no disj t1, t2: Time | (t1.start = t2.start && t1.end = t2.end)
+}
+
 fact preferencesDontExistWithoutUser{
     //Preferences shall not exist when not associated with a User
     all p1: Preferences | one u1: User | u1.preferences=p1
+}
+
+fact travelMeanDoesntExistWithoutAppointment{
+    //TravelMean shall not exist when not associated with an Appointment
+    all tv1: TravelMean| one a1: Appointment | tv1 in a1.has
 }
 
 fact locationDoesntExistWithoutAppointment{
@@ -625,6 +661,20 @@ fact startTimeSmallerThanEndTime{
     all t1: Time | t1.start < t1.end
 }
 
+fact flexibleAppointmentFitsInterval{
+    //The start and end time of a flexible appointment have to fit the
+    possible interval where the appointment can be scheduled
+    all fa1: FlexibleAppointment | fa1.time.start >= fa1.interval.start &&
+    fa1.time.end <= fa1.interval.end
+}
+
+fact flexibleAppointmentsAreNotTogether{
+    //Two flexible appointments possible scheduling interval can't overlap,
+    even if there's enough space for the minDuration of both
+    all disj f1, f2: Appointment | f1.time.end +1 = f2.time.start implies 
+    (f1 in FixedAppointment || f2 in FixedAppointment)
+}
+
 fact minDurationHasToBeIncludedInInterval{
     /*The minimum duration of a flexible appointment has to "fit" 
     in the time interval of the appointment*/
@@ -632,10 +682,17 @@ fact minDurationHasToBeIncludedInInterval{
     fa.minDuration
 }
 
-fact FixedAppointmentsDontOverlap{
-    //Two different Fixed Appointments can't overlap
-    all disj f1, f2: FixedAppointment | (f1.time.end < f2.time.start || 
+fact appointmentsDontOverlap{
+    //Two different Appointments can't overlap
+    all disj f1, f2: Appointment | (f1.time.end < f2.time.start ||
     f2.time.end < f1.time.start)
+}
+
+fact flexibleAppointmentDoesntOverlapFixedAppointment{
+    //A Flexible Appointments and a Fixed Appointment can't overlap if
+    there's not enough space for the minDuration of the Flexible one
+    all disj f: FixedAppointment, fa: FlexibleAppointment | 
+    sub[fa.time.end, f.time.end] > fa.minDuration
 }
 
 fact ifTravelMeanIsUsedActiveIsTrue{
@@ -657,25 +714,6 @@ fact differentLocationsCannotHaveSameLongitudeAndLatitude{
     l1.longitude = l2. longitude)
 }
 
-fact flexibleAppointmentDoesntOverlapFlexibleAppointment{
-    /*Two different Flexible Appointments can't overlap if 
-    there's not enough space for the minDuration of both*/
-    all disj fa1, fa2: FlexibleAppointment | 
-    (((fa1.time.start <= fa2.time.start) && (fa1.time.end <= fa2.time.end)) 
-    implies ((sub[fa2.time.end, fa1.time.start] >= 
-    add[fa1.minDuration, fa2.minDuration]))) ||
-    (((fa1.time.end <= fa2.time.start) && 
-    (fa1.time.end <= fa2.time.end)) implies
-    ((sub[fa2.time.end, fa1.time.start] >= 
-    add[fa1.minDuration, fa2.minDuration])))
-}
-
-fact flexibleAppointmentDoesntOverlapFixedAppointment{
-    /*A Flexible Appointments and a Fixed Appointment can't overlap if
-    there's not enough space for the minDuration of the Flexible one*/
-    all disj f: FixedAppointment, fa: FlexibleAppointment |
-    sub[fa.time.end, f.time.end] > fa.minDuration
-}
 
 fact travelMeansNeedToMeetPreferences{
     //Simplified to two preferences, shows that the model stands nonetheless
@@ -696,11 +734,6 @@ fact appointmentStatusCoherence{
     (one lt: LocalTime | a.time.end <= lt.time)
 }
 
-fact minDurationCoherence{
-    //Not a requirement, but needed to avoid overflow in Alloy
-    all fa: FlexibleAppointment | fa.minDuration < 8
-}
-
 fact SingletonClasses{ // Singletons
 #LocalTime=1
 }
@@ -719,21 +752,21 @@ run show for 5 but 5 int
 \end{verbatim}
 
 \begin{figure}[H]
-        \includegraphics[scale=0.8, origin=c]{executionDetail.png}
+        \includegraphics[scale=0.8, origin=c]{executionDetails.png}
         \centering
         \caption{Execution Details}
     \label{fig:execDetail}
 \end{figure}
 
 \begin{figure}[H]
-        \includegraphics[scale=0.46, angle=-90, origin=c]{generatedWorld1.png}
+        \includegraphics[scale=0.41, angle=-90, origin=c]{generatedWorld1.png}
         \centering
         \caption{Generated World 1}
     \label{fig:execDetail}
 \end{figure}
 
 \begin{figure}[H]
-        \includegraphics[scale=0.46, angle=-90, origin=c]{generatedWorld2.png}
+        \includegraphics[scale=0.42, angle=-90, origin=c]{generatedWorld2.png}
         \centering
         \caption{Generated World 2}
     \label{fig:execDetail}
@@ -781,7 +814,9 @@ run show for 5 but 5 int
   \hline
   28/10/2017 & Alloy and Final details & 4 \\ 
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{45} \\ 
+  20/12/2017 & Overall Improvements: creation of version 1.1 & 1,5 \\ 
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{46,5} \\ 
   \hline
 \end{tabular}
 \end{center}

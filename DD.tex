@@ -81,7 +81,12 @@ Of course the system will fully support the features of a regular calendar appli
 
 
 \subsection{Revision History}
-Version 1.0: Initial Release
+\textbf{Version 1.1:} 
+\begin{itemize}
+    \item Added a small description of the Algorithm to compute the best path to get to an appointment, referring to the documentation of the algorithm that shall be used.
+    \item Added a small detail to the explanation of why we chose the Client/Server Architectural Style.
+\end{itemize}
+\textbf{Version 1.0:} Initial Release
 
 \subsection{Reference Documents}
 \begin{itemize}
@@ -143,7 +148,7 @@ In the following diagram, we can see the component view of the system (the more 
     \caption{Component Diagram of the system}
     \label{fig:componentView}
 \end{figure}
-The \textbf{User Application} is the component responsible for providing the user interfaces that allow the user to interact with the system and all of its functionality. Since a thin-client architecture is being used to implement a client/server architecture, the bulk of the data processing occurs on the server. Given this, the User Application component will act as a simple "terminal" to send requests to the server, being therefore quite simple and not needed to go into further detail.
+The \textbf{User Application} is the component responsible for providing the user interfaces that allow the user to interact with the system and all of its functionality. Since a thin-client architecture is being used to implement a client/server architecture, the bulk of the data processing occurs on the server. Given this, the User Application component will act as a simple "terminal" to send requests to the server, being therefore quite simple and not needed to go into further detail. 
 
 The \textbf{Server} is the main component of the system, responsible for the data processing in order to provide all of the system's functionality. Given its complexity, it will be analyzed in further detail later in this section.
 
@@ -243,7 +248,7 @@ In this section the interfaces through which the different system's components i
         \item getBestPath(appointmentDetails): receives the data parameters related to the appointment in question and returns the best travel mean to get to that appointment.
     \end{itemize}
     \item The \textbf{DataAccessIntf} interface represents the way components can interact with the Data Mappers Component. It provides all of the needed methods and mechanisms to abstract the interaction between the database and the system.
-    \item The \textbf{Maps and Geolocation API} interface represents the way components can interact with the Maps and Geolocation service. It provides all the needed methods to get information about the appointment location and the best routes and travel means to get to that location.
+    \item The \textbf{Maps and Geolocation API} interface represents the way components can interact with the Google Maps and Geolocation service. It provides all the needed methods to get information about the appointment location and the best routes and travel means to get to that location.
     \item The \textbf{Weather API} interface represents the way components can interact with the Weather Service. It provides all the needed methods to get information about the weather forecast in a specific place and time.
     \item The \textbf{Mobike API} interface represents the way components can interact with the Mobike service. It provides all the needed methods to get information about the bicycle's location and cost.
     \item The \textbf{DriveNow API} interface represents the way components can interact with the DriveNow service. It provides all the needed methods to get information about the cars location, status, and cost.
@@ -256,9 +261,9 @@ In this section the interfaces through which the different system's components i
 
 \subsubsection{Client/Server Architecture} This architectural style keeps all the logic of the program, which is computationally heavy, on the server side, while the end-users only need to offer a simple amount of presentation functionality. This allows the system to be centralized, improving:
 \begin{itemize}
-    \item Performance: system's files are only accessed by the server, so they're all in the same place, becoming easier to manage and faster to access
-    \item Security: facilitates the implementation of security layers and protocols between the client and the server, setting up access rights to reach the server for example
-    \item Scalability: it's easy to change the logic server-side without any implication on the client side
+    \item Performance: system's files are only accessed by the server, so they're all in the same place, becoming easier to manage and faster to access.
+    \item Security: facilitates the implementation of security layers and protocols between the client and the server, setting up access rights to reach the server for example.
+    \item Scalability: it's easy to change the logic server-side without any implication on the client side. Also true the other way around: It's easy to change the client implementation without changing the logic server-side, making it easily portable to different platforms (like a desktop application, for example).
 \end{itemize}
 
 \subsubsection{Service Oriented Architecture} This architectural pattern allows the system to be designed as a collection of services that communicate with each other. This way, the external APIs that the system interacts with can be interpreted as a set of these services, which makes them easily implementable (in this case our system is the service consumer, and the APIs are the service providers). It is also possible to see our system as the service provider, first providing an initial set of services and eventually, with the addition of some additional components, increasing the number of services provided.
@@ -282,7 +287,7 @@ In this section the interfaces through which the different system's components i
 \end{itemize}
 
 \section{Algorithm Design}
-In this section, it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained using pseudo-code notation.
+In this section, it is presented an overall description of the most relevant algorithms for the Travlendar+ system, explained either using pseudo-code notation or refering to the relevant documentation about it.
 
 
 \subsection{Appointment Placement Algorithm}
@@ -389,6 +394,12 @@ Bellow the pseudo code for this algorithm is presented, in order to better under
 }
 \end{algorithm}
 
+\subsection{Best Path Computation Algorithm}
+To compute the best path to get to an appointment, the system can either use the result returned by the Google Maps and Geolocation API (if all the user settings are supported) or compute it itself (if the user has the bike and car sharing settings enabled, since these are not supported by the Google Maps and Geolocation API). 
+
+If this is the case, the system will get the required information from that API and compute the path itself, using the A* Algorithm\footnote{Documentation can be found in the References section}.
+After it, the system will choose the best one between these two paths (one returned by Google Maps and Geolocation API and the other computed with A*) and return the best one to the user.
+
 \section{User Interface Design}
 \subsection{Mockups}
 One of the most important things to take into consideration when designing an information system is the way its functionality is going to be provided to the user. Since the user interacts with our system through a GUI, saying this is the same as saying that this user interface has to be as simple and intuitive to use as possible.
@@ -402,7 +413,7 @@ The following UX Diagram provides additional information about the way the user 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.26]{uxDiagram.png}
+    \includegraphics[scale=0.233]{uxDiagram.png}
     \caption{UX Diagram}
     \label{fig:uxDiagram}
 \end{figure}
@@ -431,7 +442,7 @@ All of the design choices presented in this document were made with the goals an
     \begin{itemize}
         \item The \textbf{Appointment Controller}, which provides all of the business logic related to an appointments management, specifically to delete an appointment from the user's schedule.
     \end{itemize}
-    \item \textbf{{[G5]}} Allow a logged user to have his schedule planned in the best possible way (R15-R19).
+    \item \textbf{{[G5]}} Allow a logged user to have his schedule planned in the best possible way (R6 and R15-R19).
     \begin{itemize}
         \item The \textbf{Appointment Controller}, which provides all of the back end logic related to the appointments management, more specifically to make any change in the calendar related to insertion or deletion of appointments.
         \item The \textbf{Travel Mean Controller}, which communicates with the third party services the system uses and implements all of the needed logic to compute for the best travel means to get to an appointment.
@@ -486,7 +497,7 @@ Before integration testing of the two integrated components, the used external s
 After this, the Server can be integrated with the DBMS and shall be extensively tested, as it is the most critical and important part of the system.
 
 \subsection{User Application}
-The final part of the system to be implemented is the User Application, the topmost layer of the architecture. Since we opted for a thin client this shall be one of the easiest and fastest steps of the development process.
+The final part of the system to be implemented is the User Application, the topmost layer of the architecture. Since we opted for a thin-client this shall be one of the easiest and fastest steps of the development process.
 When finished, it shall be integrated with the rest of the components of the system in order to test the system as a whole.
 
 
@@ -531,7 +542,9 @@ When finished, it shall be integrated with the rest of the components of the sys
   \hline
   25/11/2017 & Final DD details & 1,5 \\
   \hline
-  \textbf{TOTAL} & \multicolumn{2}{c|}{43} \\ 
+  20/12/2017 & Overall Improvements: creation of version 1.1 & 1 \\ 
+  \hline
+  \textbf{TOTAL} & \multicolumn{2}{c|}{44} \\ 
   \hline
 \end{tabular}
 \end{center}
@@ -587,6 +600,10 @@ https://www.safaribooksonline.com/library/view/software-architecture-patterns/97
 https://martinfowler.com/eaaCatalog/index.html
 \bibitem{FowlerBook} 
 Fowler, Martin. \textit{Patterns of Enterprise Application Architecture, 1st Edition}
+\bibitem{siteA*Documentation1} 
+https://en.wikipedia.org/wiki/A*\_search\_algorithm
+\bibitem{siteA*Documentation2} 
+http://web.mit.edu/eranki/www/tutorials/search/
 
 \end{thebibliography}
 

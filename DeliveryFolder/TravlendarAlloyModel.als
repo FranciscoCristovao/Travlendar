@@ -31,7 +31,8 @@ enum AppointmentStatus{
 sig FixedAppointment extends Appointment{}
 
 sig FlexibleAppointment extends Appointment{
-	minDuration: one Int
+	minDuration: one Int,
+	interval: one Time
 }{minDuration > 2}
 
 sig Time{
@@ -88,12 +89,22 @@ fact appointmentDoesntExistWithoutUser{
 
 fact timeDoesntExistWithoutAppointment{
 	//Time shall not exist when not associated with an Appointment
-	all t1: Time | one a1: Appointment | t1 in a1.time
+	all t1: Time | one a1: Appointment | t1 in a1.time || (a1 in FlexibleAppointment && t1 in a1.interval)
+}
+
+fact differentTimesCannotHaveSameStartAndEnd{
+	//Two times can't be identical 
+	no disj t1, t2: Time | (t1.start = t2.start && t1.end = t2.end)
 }
 
 fact preferencesDontExistWithoutUser{
 	//Preferences shall not exist when not associated with a User
 	all p1: Preferences | one u1: User | u1.preferences=p1
+}
+
+fact travelMeanDoesntExistWithoutAppointment{
+	//TravelMean shall not exist when not associated with an Appointment
+	all tv1: TravelMean| one a1: Appointment | tv1 in a1.has
 }
 
 fact locationDoesntExistWithoutAppointment{
@@ -106,14 +117,29 @@ fact startTimeSmallerThanEndTime{
 	all t1: Time | t1.start < t1.end
 }
 
+fact flexibleAppointmentFitsInterval{
+	//The start and end time of a flexible appointment have to fit the possible interval where the appointment can be scheduled
+	all fa1: FlexibleAppointment | fa1.time.start >= fa1.interval.start && fa1.time.end <= fa1.interval.end
+}
+
+fact flexibleAppointmentsAreNotTogether{
+	//Two flexible appointments possible scheduling interval can't overlap, even if there's enough space for the minDuration of both
+	all disj f1, f2: Appointment | f1.time.end +1 = f2.time.start implies (f1 in FixedAppointment || f2 in FixedAppointment)
+}
+
 fact minDurationHasToBeIncludedInInterval{
 	//The minimum duration of a flexible appointment has to "fit" in the time interval of the appointment
 	all fa: FlexibleAppointment | sub[fa.time.end, fa.time.start] > fa.minDuration
 }
 
-fact FixedAppointmentsDontOverlap{
-	//Two different Fixed Appointments can't overlap
-	all disj f1, f2: FixedAppointment | (f1.time.end < f2.time.start || f2.time.end < f1.time.start)
+fact appointmentsDontOverlap{
+	//Two different Appointments can't overlap
+	all disj f1, f2: Appointment | (f1.time.end < f2.time.start || f2.time.end < f1.time.start)
+}
+
+fact flexibleAppointmentDoesntOverlapFixedAppointment{
+	//A Flexible Appointments and a Fixed Appointment can't overlap if there's not enough space for the minDuration of the Flexible one
+	all disj f: FixedAppointment, fa: FlexibleAppointment | sub[fa.time.end, f.time.end] > fa.minDuration
 }
 
 fact ifTravelMeanIsUsedActiveIsTrue{
@@ -131,19 +157,6 @@ fact differentLocationsCannotHaveSameLongitudeAndLatitude{
 	no disj l1, l2: Location | (l1.latitude = l2.latitude && l1.longitude = l2. longitude)
 }
 
-fact flexibleAppointmentDoesntOverlapFlexibleAppointment{
-	//Two different Flexible Appointments can't overlap if there's not enough space for the minDuration of both
-	all disj fa1, fa2: FlexibleAppointment | (((fa1.time.start <= fa2.time.start) && (fa1.time.end <= fa2.time.end)) implies
-																((sub[fa2.time.end, fa1.time.start] >= add[fa1.minDuration, fa2.minDuration]))) ||
-															(((fa1.time.end <= fa2.time.start) && (fa1.time.end <= fa2.time.end)) implies
-																((sub[fa2.time.end, fa1.time.start] >= add[fa1.minDuration, fa2.minDuration])))
-}
-
-fact flexibleAppointmentDoesntOverlapFixedAppointment{
-	//A Flexible Appointments and a Fixed Appointment can't overlap if there's not enough space for the minDuration of the Flexible one
-	all disj f: FixedAppointment, fa: FlexibleAppointment | sub[fa.time.end, f.time.end] > fa.minDuration
-}
-
 fact travelMeansNeedToMeetPreferences{
 	//Simplified to two preferences, shows that the model stands nonetheless
 	all u1: User, pt1: PublicTransport |  (pt1 in u1.realizes.has) implies 
@@ -159,11 +172,6 @@ fact appointmentStatusCoherence{
 	all a: Appointment | a.status = finished <=> (one lt: LocalTime | a.time.end <= lt.time)
 }
 
-fact minDurationCoherence{
-	//Not a requirement, but needed to avoid overflow in Alloy
-	all fa: FlexibleAppointment | fa.minDuration < 8
-}
-
 fact SingletonClasses{ // Singletons
 #LocalTime=1
 }
@@ -174,5 +182,6 @@ pred show{
 #FlexibleAppointment=2
 #FixedAppointment=2
 #TravelMean=5
+#string = 1
 }
 run show for 5 but 5 int
